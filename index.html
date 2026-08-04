@@ -171,22 +171,28 @@ body {
 .wow-card-actions li { font-size: 12px; color: rgba(255,255,255,0.85); padding-left: 18px; position: relative; }
 .wow-card-actions li::before { content: '✓'; position: absolute; left: 0; color: var(--lime); font-weight: 800; }
 
-/* ── HEADER (full bleed hero, lime band like daybreak.ai/about "Our Story") ── */
-.header { position: relative; text-align: center; padding: 72px 24px 64px; background: var(--lime-light); }
-.header-eyebrow {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--green-dark); margin-bottom: 16px;
+/* ── HEADER (full bleed hero) ── */
+.header { position: relative; text-align: center; overflow: hidden; padding: 72px 24px 64px; }
+.header::before {
+  content: ''; position: absolute; top: -30%; right: -5%; width: 50%; height: 160%;
+  background: radial-gradient(circle, var(--green-mid) 0%, rgba(182,222,195,0.25) 55%, rgba(182,222,195,0) 75%);
+  filter: blur(10px); z-index: 0; pointer-events: none;
 }
+.header::after {
+  content: ''; position: absolute; bottom: -40%; left: -5%; width: 40%; height: 140%;
+  background: radial-gradient(circle, rgba(61,186,97,0.16) 0%, rgba(61,186,97,0) 70%);
+  filter: blur(10px); z-index: 0; pointer-events: none;
+}
+.header > * { position: relative; z-index: 1; }
 .header-title {
   font-size: clamp(40px, 6vw, 68px);
-  font-weight: 700; letter-spacing: -0.03em; line-height: 1.05;
-  color: var(--dark); margin-bottom: 22px;
+  font-weight: 800; letter-spacing: -0.03em; line-height: 1.0;
+  color: var(--dark); margin-bottom: 14px;
 }
-.header-title span { color: var(--green-dark); }
-.header-divider { width: 64px; height: 2px; background: rgba(34,34,34,0.18); margin: 0 auto 22px; }
+.header-title span { color: var(--green); }
 .header-desc {
-  font-size: 17px; color: #3F4A3F;
-  max-width: 460px; margin: 0 auto; line-height: 1.65;
+  font-size: 17px; color: var(--gray);
+  max-width: 460px; margin: 0 auto; line-height: 1.65; font-style: italic;
 }
 
 /* ── MAP SECTION ── */
@@ -436,9 +442,7 @@ body {
 <!-- HEADER -->
 <header class="header section-band">
   <div class="section-band-inner">
-    <div class="header-eyebrow">Daybreak People Team</div>
     <h1 class="header-title">The People <span>Hub ⚾</span></h1>
-    <div class="header-divider"></div>
     <p class="header-desc">Step up to the plate, Breaker. This is your home base for everything Daybreak: the tools, programs, and people that make it all happen.</p>
   </div>
 </header>
