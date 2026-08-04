@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breaker Awards Admin Report</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #2D9B4E; --green-bright: #3DBA61; --green-light: #E8F5EC;
+  --dark: #0A0F0A; --white: #fff; --gray: rgba(255,255,255,0.45);
+}
+body { font-family: 'DM Sans', sans-serif; background: #0A0F0A; color: #fff; min-height: 100vh; }
+
+/* ── LOGIN SCREEN ── */
+#login-screen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, #1A4A2A 0%, transparent 70%), #050905;
+}
+.login-box {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(45,155,78,0.25);
+  border-radius: 24px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+.login-icon { font-size: 48px; margin-bottom: 16px; }
+.login-title { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+.login-sub { font-size: 14px; color: var(--gray); margin-bottom: 32px; }
+.login-input {
+  width: 100%; padding: 13px 16px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 12px; color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 15px;
+  outline: none; text-align: center; letter-spacing: 0.2em;
+  margin-bottom: 16px;
+}
+.login-input:focus { border-color: var(--green-bright); }
+.login-btn {
+  width: 100%; padding: 13px;
+  background: var(--green); border: none; border-radius: 12px;
+  color: #fff; font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: background 0.15s;
+}
+.login-btn:hover { background: var(--green-bright); }
+.login-error { color: #FB7185; font-size: 13px; margin-top: 12px; display: none; }
+
+/* ── ADMIN DASHBOARD ── */
+#admin-screen { display: none; }
+
+.top-bar {
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(45,155,78,0.15);
+  padding: 20px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.top-bar-left { display: flex; align-items: center; gap: 12px; }
+.top-bar-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green-bright); }
+.top-bar-title { font-size: 16px; font-weight: 800; letter-spacing: -0.01em; }
+.top-bar-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
+.top-bar-actions { display: flex; gap: 10px; align-items: center; }
+
+.btn-export {
+  padding: 9px 20px; border-radius: 10px; border: none;
+  background: var(--green); color: #fff;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: background 0.15s;
+}
+.btn-export:hover { background: var(--green-bright); }
+.btn-clear {
+  padding: 9px 20px; border-radius: 10px;
+  border: 1px solid rgba(251,113,133,0.3);
+  background: rgba(251,113,133,0.08);
+  color: #FB7185;
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-clear:hover { border-color: #FB7185; background: rgba(251,113,133,0.15); }
+.btn-logout {
+  padding: 9px 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent; color: var(--gray);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer;
+}
+.btn-logout:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+.btn-hub {
+  padding: 9px 16px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent; color: var(--gray);
+  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  transition: all 0.15s;
+}
+.btn-hub:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+
+.dashboard { padding: 40px; max-width: 1200px; margin: 0 auto; }
+
+/* Stats row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.stat-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+.stat-num { font-size: 36px; font-weight: 800; color: var(--green-bright); letter-spacing: -0.02em; }
+.stat-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray); margin-top: 4px; }
+
+/* Award sections */
+.award-section { margin-bottom: 40px; }
+.award-section-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 20px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.award-section-icon { font-size: 22px; }
+.award-section-title { font-size: 15px; font-weight: 800; }
+.award-section-count {
+  margin-left: auto;
+  font-size: 12px; font-weight: 700;
+  padding: 3px 12px; border-radius: 100px;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+}
+
+/* nomination rows */
+.nominations-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.nominations-table th {
+  text-align: left;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--gray);
+  padding: 8px 16px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.nominations-table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  vertical-align: top;
+}
+.nominations-table tr:last-child td { border-bottom: none; }
+.nominations-table tr:hover td { background: rgba(255,255,255,0.03); }
+.td-name { font-weight: 700; color: #fff; }
+.td-nominator { color: var(--gray); }
+.td-desc { color: rgba(255,255,255,0.65); font-size: 13px; line-height: 1.5; max-width: 360px; }
+.td-date { color: var(--gray); font-size: 12px; white-space: nowrap; }
+.td-del {
+  cursor: pointer; color: rgba(251,113,133,0.5);
+  font-size: 16px; text-align: center;
+  transition: color 0.15s;
+}
+.td-del:hover { color: #FB7185; }
+
+/* Winner badge */
+.winner-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 100px;
+  background: rgba(245,200,66,0.15); color: #F5C842;
+  border: 1px solid rgba(245,200,66,0.3);
+  margin-left: 8px; vertical-align: middle;
+}
+
+.empty-state {
+  text-align: center; padding: 40px 20px;
+  color: var(--gray); font-size: 14px;
+  border: 1px dashed rgba(255,255,255,0.1);
+  border-radius: 12px;
+}
+.empty-state .empty-icon { font-size: 32px; margin-bottom: 8px; }
+
+/* Theme colors for section headers */
+.section-mvp     { background: rgba(122,79,0,0.2); border-color: rgba(245,200,66,0.2); }
+.section-cy      { background: rgba(26,92,48,0.2); border-color: rgba(74,222,128,0.2); }
+.section-rookie  { background: rgba(27,42,74,0.2); border-color: rgba(96,165,250,0.2); }
+.section-glove   { background: rgba(122,79,0,0.2); border-color: rgba(245,200,66,0.2); }
+.section-roberto { background: rgba(139,26,20,0.2); border-color: rgba(251,113,133,0.2); }
+.section-slugger { background: rgba(74,34,114,0.2); border-color: rgba(192,132,252,0.2); }
+.section-team    { background: rgba(27,42,74,0.2); border-color: rgba(74,222,128,0.2); }
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-icon">🏆</div>
+    <div class="login-title">Awards Admin</div>
+    <div class="login-sub">People Ops access only</div>
+    <input class="login-input" type="password" id="pwd-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
+    <button class="login-btn" onclick="doLogin()">Enter Dashboard</button>
+    <div class="login-error" id="login-error">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- ── ADMIN DASHBOARD ── -->
+<div id="admin-screen">
+
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <div class="top-bar-dot"></div>
+      <div>
+        <div class="top-bar-title">Breaker Awards Nominations Report</div>
+        <div class="top-bar-sub">Daybreak · People Ops</div>
+      </div>
+    </div>
+    <div class="top-bar-actions">
+      <a class="btn-hub" href="https://breaker-awards.vercel.app/">🏠 People Hub</a>
+      <button class="btn-export" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn-clear" onclick="clearAll()">🗑 Clear All</button>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="dashboard">
+
+    <!-- Stats -->
+    <div class="stats-row" id="stats-row"></div>
+
+    <!-- Award sections -->
+    <div id="award-sections"></div>
+
+  </div>
+</div>
+
+<script>
+  const LOG_KEY  = 'breaker_awards_log';
+  const ADMIN_PW = 'daybreak2025';  // ← change this to your preferred password
+
+  const AWARDS = [
+    { key: 'Most Valuable Breaker (MVB)',       icon: '🏆', cls: 'section-mvp',     label: 'MVP' },
+    { key: 'Cy Young Breaker',            icon: '⚡', cls: 'section-cy',      label: 'Cy Young' },
+    { key: 'Gold Glove Breaker',          icon: '🧤', cls: 'section-glove',   label: 'Gold Glove' },
+    { key: 'Roberto Clemente Breaker',    icon: '🌎', cls: 'section-roberto', label: 'Clemente' },
+    { key: 'Silver Slugger Breaker',      icon: '🪄', cls: 'section-slugger', label: 'Silver Slugger' },
+    { key: 'Golden Heart Breaker',         icon: '💚', cls: 'section-cy',      label: 'Golden Heart' },
+    { key: 'World Series Champion Award', icon: '⚾', cls: 'section-team',    label: 'World Series' },
+  ];
+
+  function doLogin() {
+    const val = document.getElementById('pwd-input').value;
+    if (val === ADMIN_PW) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+      renderDashboard();
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+    }
+  }
+
+  function logout() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('admin-screen').style.display = 'none';
+    document.getElementById('pwd-input').value = '';
+    document.getElementById('login-error').style.display = 'none';
+  }
+
+  function getData() {
+    return JSON.parse(localStorage.getItem(LOG_KEY) || '[]');
+  }
+
+  function renderDashboard() {
+    const data = getData();
+
+    // Stats
+    const statsRow = document.getElementById('stats-row');
+    const byAward = {};
+    AWARDS.forEach(a => byAward[a.key] = []);
+    data.forEach(d => {
+      const key = AWARDS.find(a => d.award.includes(a.key.split(' ')[0])) ? d.award : d.award;
+      const match = AWARDS.find(a => d.award === a.key);
+      if (match) byAward[match.key].push(d);
+    });
+
+    const uniqueBreakers = new Set(data.map(d => d.breaker.toLowerCase())).size;
+    const uniqueNominators = new Set(data.map(d => d.nominator.toLowerCase())).size;
+
+    statsRow.innerHTML = `
+      <div class="stat-card"><div class="stat-num">${data.length}</div><div class="stat-label">Total Nominations</div></div>
+      <div class="stat-card"><div class="stat-num">${uniqueBreakers}</div><div class="stat-label">Unique Breakers</div></div>
+      <div class="stat-card"><div class="stat-num">${uniqueNominators}</div><div class="stat-label">Nominators</div></div>
+      <div class="stat-card"><div class="stat-num">${AWARDS.filter(a => byAward[a.key].length > 0).length}</div><div class="stat-label">Active Categories</div></div>
+    `;
+
+    // Award sections
+    const container = document.getElementById('award-sections');
+    container.innerHTML = '';
+
+    AWARDS.forEach(award => {
+      const noms = byAward[award.key] || [];
+
+      // Find top nominee (most nominated breaker in this category)
+      const counts = {};
+      noms.forEach(n => { const k = n.breaker.toLowerCase(); counts[k] = (counts[k]||0)+1; });
+      const topKey = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0]?.[0];
+
+      const section = document.createElement('div');
+      section.className = 'award-section';
+      section.innerHTML = `
+        <div class="award-section-header ${award.cls}">
+          <span class="award-section-icon">${award.icon}</span>
+          <span class="award-section-title">${award.key}</span>
+          <span class="award-section-count">${noms.length} nomination${noms.length !== 1 ? 's' : ''}</span>
+        </div>
+        ${noms.length === 0
+          ? `<div class="empty-state"><div class="empty-icon">📭</div>No nominations yet</div>`
+          : `<table class="nominations-table">
+              <thead><tr>
+                <th>Breaker</th>
+                <th>Nominated by</th>
+                <th>Recognition</th>
+                <th>Date</th>
+                <th></th>
+              </tr></thead>
+              <tbody>
+                ${noms.map(n => `
+                  <tr>
+                    <td class="td-name">
+                      ${escHtml(n.breaker)}
+                      ${n.breaker.toLowerCase() === topKey && noms.length > 1
+                        ? '<span class="winner-badge">⭐ Top nominee</span>' : ''}
+                    </td>
+                    <td class="td-nominator">${escHtml(n.nominator)}</td>
+                    <td class="td-desc">${escHtml(n.desc || '—')}</td>
+                    <td class="td-date">${n.date}</td>
+                    <td class="td-del" onclick="deleteEntry(${n.id})" title="Delete">✕</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>`
+        }
+      `;
+      container.appendChild(section);
+    });
+  }
+
+  function deleteEntry(id) {
+    if (!confirm('Remove this nomination?')) return;
+    const data = getData().filter(d => d.id !== id);
+    localStorage.setItem(LOG_KEY, JSON.stringify(data));
+    renderDashboard();
+  }
+
+  function clearAll() {
+    if (!confirm('Clear ALL nominations? This cannot be undone.')) return;
+    localStorage.removeItem(LOG_KEY);
+    renderDashboard();
+  }
+
+  function exportCSV() {
+    const data = getData();
+    if (!data.length) return alert('No nominations to export.');
+    const headers = ['Award','Breaker','Nominated By','Recognition','Date'];
+    const rows = data.map(d => [
+      `"${(d.award||'').replace(/"/g,'""')}"`,
+      `"${(d.breaker||'').replace(/"/g,'""')}"`,
+      `"${(d.nominator||'').replace(/"/g,'""')}"`,
+      `"${(d.desc||'').replace(/"/g,'""')}"`,
+      `"${d.date||''}"`
+    ].join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `breaker_awards_report_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
+  function escHtml(str) {
+    if (!str) return '—';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+</script>
+</body>
+</html>
