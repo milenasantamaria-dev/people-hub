@@ -8,6 +8,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-Light-V1.123.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-LightItalic-V1.123.woff2') format('woff2'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-Regular-V1.123.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-RegularItalic-V1.123.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-Bold-V1.123.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-BoldItalic-V1.123.woff2') format('woff2'); font-weight: 700; font-style: italic; font-display: swap; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --green: #39B15A;
@@ -27,7 +33,7 @@
 }
 
 body {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Aeonik', 'Manrope', sans-serif;
   background: #F6F6F6;
   color: var(--dark);
   min-height: 100vh;
@@ -62,7 +68,7 @@ body {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 16px; border-radius: 100px; border: none;
   background: transparent; color: var(--gray);
-  font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600;
+  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 13px; font-weight: 600;
   cursor: pointer; transition: all 0.18s; white-space: nowrap; text-decoration: none;
 }
 .nav-btn:hover { background: var(--green-light); color: var(--green-dark); }
@@ -228,7 +234,7 @@ body {
 .leaflet-control-zoom a:hover { background: var(--green-light) !important; color: var(--green) !important; }
 .map-tooltip {
   background: var(--dark) !important; border: none !important;
-  color: #fff !important; font-family: 'Manrope', sans-serif !important;
+  color: #fff !important; font-family: 'Aeonik', 'Manrope', sans-serif !important;
   font-size: 12px !important; font-weight: 700 !important;
   padding: 5px 12px !important; border-radius: 8px !important;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
@@ -295,7 +301,7 @@ body {
 .card-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 7px;
   padding: 11px 20px; border-radius: 12px; border: none;
-  font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
+  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
   cursor: pointer; transition: all 0.15s; text-decoration: none; width: 100%;
 }
 .btn-primary { background: var(--green); color: #fff; }
@@ -341,7 +347,7 @@ body {
 
 /* ── MEGA MENU ── */
 .nav-group { position: relative; }
-.nav-btn-top { font-family: 'Manrope', sans-serif; }
+.nav-btn-top { font-family: 'Aeonik', 'Manrope', sans-serif; }
 .nav-dropdown {
   position: absolute; top: calc(100% + 8px); left: 0; min-width: 230px;
   background: var(--white); border: 1px solid var(--border); border-radius: 14px;

@@ -8,6 +8,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-Light-V1.123.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-LightItalic-V1.123.woff2') format('woff2'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-Regular-V1.123.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-RegularItalic-V1.123.woff2') format('woff2'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-Bold-V1.123.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-BoldItalic-V1.123.woff2') format('woff2'); font-weight: 700; font-style: italic; font-display: swap; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -35,7 +41,7 @@
 }
 
 body {
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Aeonik', 'Manrope', sans-serif;
   color: var(--dark);
   min-height: 100vh;
   overflow-x: hidden;
@@ -159,7 +165,7 @@ body {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 16px; border-radius: 100px;
   background: var(--green-light); border: 1px solid var(--green-mid);
-  color: var(--green-dark); font-family: 'Manrope', sans-serif;
+  color: var(--green-dark); font-family: 'Aeonik', 'Manrope', sans-serif;
   font-size: 13px; font-weight: 700; text-decoration: none;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
@@ -210,7 +216,7 @@ body {
   border: 1px solid var(--border);
   background: var(--white);
   color: var(--gray);
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Aeonik', 'Manrope', sans-serif;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -334,7 +340,7 @@ body {
   text-transform: uppercase; color: var(--gray);
 }
 .field-input, .field-textarea {
-  font-family: 'Manrope', sans-serif; font-size: 14px; font-weight: 500;
+  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 14px; font-weight: 500;
   color: var(--dark);
   border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px;
   background: var(--white); width: 100%;
@@ -358,7 +364,7 @@ body {
 .btn-pdf {
   flex: 1; padding: 11px; border-radius: 10px; border: none;
   background: var(--green); color: white;
-  font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
+  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
   cursor: pointer; transition: background 0.15s;
   display: flex; align-items: center; justify-content: center; gap: 6px;
 }
@@ -369,7 +375,7 @@ body {
   border: 1px solid var(--border);
   background: var(--white);
   color: var(--gray);
-  font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600;
+  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 13px; font-weight: 600;
   cursor: pointer; transition: all 0.15s;
 }
 .btn-copy:hover { border-color: var(--green-mid); color: var(--green-dark); }
@@ -401,7 +407,7 @@ body {
   position: fixed;
   left: -9999px;
   top: 0;
-  font-family: 'Manrope', sans-serif;
+  font-family: 'Aeonik', 'Manrope', sans-serif;
   background: transparent;
   padding: 0;
   margin: 0;
