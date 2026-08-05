@@ -358,10 +358,11 @@ body {
 /* Card footer */
 .card-footer {
   padding: 0 16px 18px;
-  display: flex; gap: 8px;
+  display: flex; flex-direction: column; gap: 8px;
   position: relative; z-index: 1;
   background: transparent;
 }
+.card-footer-row { display: flex; gap: 8px; }
 .btn-pdf {
   flex: 1; padding: 11px; border-radius: 10px; border: none;
   background: var(--green); color: white;
@@ -380,6 +381,16 @@ body {
   cursor: pointer; transition: all 0.15s;
 }
 .btn-copy:hover { border-color: var(--green-mid); color: var(--green-dark); }
+.btn-slack {
+  width: 100%; padding: 11px; border-radius: 10px;
+  border: 1px solid var(--green-mid);
+  background: var(--green-light); color: var(--green-dark);
+  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-slack:hover { background: var(--green); color: #fff; border-color: var(--green); }
+.btn-slack:disabled { background: var(--border); color: var(--gray); cursor: not-allowed; border-color: var(--border); }
 
 .stitch { display: none; }
 
@@ -456,6 +467,7 @@ body {
   /* Buttons */
   .btn-pdf { padding: 12px; font-size: 14px; }
   .btn-copy { padding: 12px 14px; font-size: 14px; }
+  .btn-slack { padding: 12px; font-size: 14px; }
 
   /* Footer */
   .page-footer p { font-size: 11px; }
@@ -464,7 +476,7 @@ body {
 @media (max-width: 400px) {
   .hero-title { font-size: 40px; }
   .hero-eyebrow { font-size: 9px; letter-spacing: 0.12em; }
-  .card-footer { flex-direction: column; }
+  .card-footer-row { flex-direction: column; }
   .btn-copy { width: 100%; text-align: center; }
 }
 
@@ -508,7 +520,10 @@ body {
         <div class="field-group"><label class="field-label">Nominated by</label><input class="field-input" type="text" placeholder="Your name" data-field="nominator" /></div>
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Describe what this Breaker did that made the whole team better…" data-field="desc"></textarea></div>
       </div>
-      <div class="card-footer"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+      <div class="card-footer">
+        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+      </div>
     </div>
     <div class="card theme-green" data-cat="individual">
       <div class="card-header"><div class="award-badge">🎯 Execution Award</div><div class="award-icon-wrap"><span class="award-icon">⚡</span></div><div class="award-title">Cy Young Breaker</div><div class="award-subtitle">The one who delivers every single time</div><div class="award-accent-bar"></div></div>
@@ -517,7 +532,10 @@ body {
         <div class="field-group"><label class="field-label">Nominated by</label><input class="field-input" type="text" placeholder="Your name" data-field="nominator" /></div>
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Highlight the consistent, high-quality execution that earned this award…" data-field="desc"></textarea></div>
       </div>
-      <div class="card-footer"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+      <div class="card-footer">
+        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+      </div>
     </div>
     <div class="card theme-gold" data-cat="individual">
       <div class="card-header"><div class="award-badge">🛡 Defense Award</div><div class="award-icon-wrap"><span class="award-icon">🧤</span></div><div class="award-title">Gold Glove Breaker</div><div class="award-subtitle">Flawless execution nothing gets past them</div><div class="award-accent-bar"></div></div>
@@ -526,7 +544,10 @@ body {
         <div class="field-group"><label class="field-label">Nominated by</label><input class="field-input" type="text" placeholder="Your name" data-field="nominator" /></div>
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Describe how this Breaker caught every detail, prevented issues, or protected the team…" data-field="desc"></textarea></div>
       </div>
-      <div class="card-footer"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+      <div class="card-footer">
+        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+      </div>
     </div>
     <div class="card theme-red" data-cat="individual">
       <div class="card-header"><div class="award-badge">❤️ Culture Award</div><div class="award-icon-wrap"><span class="award-icon">🌎</span></div><div class="award-title">Roberto Clemente Breaker</div><div class="award-subtitle">Heart, culture, and community builder</div><div class="award-accent-bar"></div></div>
@@ -535,7 +556,10 @@ body {
         <div class="field-group"><label class="field-label">Nominated by</label><input class="field-input" type="text" placeholder="Your name" data-field="nominator" /></div>
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Highlight how this Breaker embodies Daybreak's culture and lifts others around them…" data-field="desc"></textarea></div>
       </div>
-      <div class="card-footer"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+      <div class="card-footer">
+        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+      </div>
     </div>
     <div class="card theme-purple" data-cat="individual">
       <div class="card-header"><div class="award-badge">⚡ Impact Award</div><div class="award-icon-wrap"><span class="award-icon">🪄</span></div><div class="award-title">Silver Slugger Breaker</div><div class="award-subtitle">The one who drives results again and again</div><div class="award-accent-bar"></div></div>
@@ -544,7 +568,10 @@ body {
         <div class="field-group"><label class="field-label">Nominated by</label><input class="field-input" type="text" placeholder="Your name" data-field="nominator" /></div>
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Describe the tangible results and impact this Breaker created for the team or product…" data-field="desc"></textarea></div>
       </div>
-      <div class="card-footer"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+      <div class="card-footer">
+        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+      </div>
     </div>
 
     <div class="card theme-green" data-cat="individual">
@@ -554,7 +581,10 @@ body {
         <div class="field-group"><label class="field-label">Nominated by</label><input class="field-input" type="text" placeholder="Your name" data-field="nominator" /></div>
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Share how this Breaker showed up with kindness, empathy, and heart for others…" data-field="desc"></textarea></div>
       </div>
-      <div class="card-footer"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+      <div class="card-footer">
+        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+      </div>
     </div>
     <div class="card theme-team" data-cat="team">
       <div class="card-header"><div class="award-badge">🏟 Team Award</div><div class="award-icon-wrap"><span class="award-icon">⚾</span></div><div class="award-title">World Series Champion Award</div><div class="award-subtitle">The team that went all the way</div><div class="award-accent-bar"></div></div>
@@ -564,7 +594,10 @@ body {
         <div class="field-group"><label class="field-label">Team Members</label><textarea class="field-textarea" placeholder="Team members" style="min-height:52px;" data-field="members"></textarea><span class="team-names-note">List everyone separated by commas.</span></div>
         <div class="field-group"><label class="field-label">What the Team Achieved</label><textarea class="field-textarea" placeholder="Describe the project, milestone, or moment this team crushed it together…" data-field="desc"></textarea></div>
       </div>
-      <div class="card-footer"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+      <div class="card-footer">
+        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+      </div>
     </div>
   </div>
 </section>
@@ -615,22 +648,19 @@ body {
     localStorage.setItem(LOG_KEY, JSON.stringify(existing));
   }
 
-  async function savePDF(card) {
-    const btn = card.querySelector('.btn-pdf');
+  async function buildCardPdf(card) {
     const nameVal      = card.querySelector('[data-field="name"]')?.value.trim()      || '';
     const nominatorVal = card.querySelector('[data-field="nominator"]')?.value.trim() || '';
     const descVal      = card.querySelector('[data-field="desc"]')?.value.trim()      || '';
     const titleText    = card.querySelector('.award-title').textContent.trim();
 
-    btn.disabled = true;
-    btn.textContent = '⏳ Generating…';
-
     const footer = card.querySelector('.card-footer');
     footer.style.display = 'none';
     await new Promise(r => setTimeout(r, 80));
 
+    let canvas;
     try {
-      const canvas = await html2canvas(card, {
+      canvas = await html2canvas(card, {
         scale: 3,
         useCORS: true,
         backgroundColor: null,
@@ -638,17 +668,29 @@ body {
         scrollX: 0,
         scrollY: -window.scrollY,
       });
-
+    } finally {
       footer.style.display = '';
+    }
 
-      const mmW = (canvas.width  / 3) * 0.2646;
-      const mmH = (canvas.height / 3) * 0.2646;
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [mmW, mmH] });
-      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, mmW, mmH);
+    const mmW = (canvas.width  / 3) * 0.2646;
+    const mmH = (canvas.height / 3) * 0.2646;
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [mmW, mmH] });
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, mmW, mmH);
 
-      const safeName  = (nameVal || 'breaker').replace(/[^a-z0-9]/gi, '_').toLowerCase();
-      const safeTitle = titleText.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const safeName  = (nameVal || 'breaker').replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const safeTitle = titleText.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+
+    return { pdf, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle };
+  }
+
+  async function savePDF(card) {
+    const btn = card.querySelector('.btn-pdf');
+    btn.disabled = true;
+    btn.textContent = '⏳ Generating…';
+
+    try {
+      const { pdf, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle } = await buildCardPdf(card);
       pdf.save(`daybreak_${safeTitle}_${safeName}.pdf`);
 
       // ── Silent log ──
@@ -658,9 +700,40 @@ body {
       setTimeout(() => { btn.disabled = false; btn.textContent = '⬇ Save as PDF'; }, 3000);
     } catch(err) {
       console.error(err);
-      footer.style.display = '';
       btn.disabled = false;
       btn.textContent = '⬇ Save as PDF';
+    }
+  }
+
+  async function sendToSlack(card) {
+    const btn = card.querySelector('.btn-slack');
+    btn.disabled = true;
+    btn.textContent = '⏳ Sending…';
+
+    try {
+      const { pdf, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle } = await buildCardPdf(card);
+      const pdfBase64 = pdf.output('datauristring').split(',')[1];
+      const filename = `daybreak_${safeTitle}_${safeName}.pdf`;
+      const message = `🏆 *${titleText}* nomination for *${nameVal || 'a Breaker'}*, submitted by ${nominatorVal || 'Anonymous'}.`;
+
+      const res = await fetch('/api/send-to-slack', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pdfBase64, filename, message }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Slack upload failed');
+
+      // ── Silent log ──
+      logNomination(titleText, nameVal, nominatorVal, descVal);
+
+      btn.textContent = '✓ Sent!';
+      setTimeout(() => { btn.disabled = false; btn.textContent = '📤 Send to Slack'; }, 3000);
+    } catch(err) {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = '⚠ Failed — retry';
+      setTimeout(() => { btn.textContent = '📤 Send to Slack'; }, 3000);
     }
   }
 
