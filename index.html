@@ -387,6 +387,17 @@ body {
 .benefit-item li strong { color: var(--dark); }
 .benefit-item li ul { margin-top: 4px; margin-bottom: 0; }
 .benefit-item li ul li { margin-bottom: 2px; }
+.benefit-subblock {
+  margin-top: 14px; background: var(--white); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+}
+.benefit-subblock-title {
+  font-size: 12px; font-weight: 800; color: var(--dark); text-transform: uppercase;
+  letter-spacing: 0.04em; margin-bottom: 8px;
+}
+.benefit-subblock-row { display: flex; gap: 6px; font-size: 13px; color: var(--gray); line-height: 1.5; margin-bottom: 6px; }
+.benefit-subblock-row:last-child { margin-bottom: 0; }
+.benefit-subblock-row strong { color: var(--dark); flex-shrink: 0; }
 .benefit-item a { color: var(--green); font-weight: 700; text-decoration: none; }
 .benefit-item a:hover { text-decoration: underline; }
 
@@ -689,15 +700,15 @@ body {
         <li>12 paid sick days per calendar year</li>
         <li>Maternity and parental leave</li>
         <li>Short-term/long-term disability and life insurance — automatically enrolled</li>
-        <li><strong>401(k) (Empower):</strong> automatically enrolled at 5% self-contribution. <a href="https://www.sequoia.com/2025/11/irs-announces-2026-401k-and-403b-contribution-limits/" target="_blank" rel="noopener">See 2026 401(k) contribution limits →</a></li>
-        <li><strong>Flexible Spending Account (FSA), 2026 Contribution Limits:</strong>
-          <ul>
-            <li><strong>Medical FSA</strong> — annual limit $3,300; up to $670 can roll over into 2026</li>
-            <li><strong>Dependent Care FSA</strong> — $5,000 per household; $2,500 if married and filing separately</li>
-          </ul>
-        </li>
+        <li><strong>401(k) (Empower):</strong> automatically enrolled at 5% self-contribution</li>
         <li><strong>Phone &amp; internet stipend:</strong> $50/month for VPs and above, and Breakers in Recruiting, Sales (Account Executives, Business Development), or Professional Services · $35/month for all other Breakers</li>
-      </ul></details>
+      </ul>
+      <div class="benefit-subblock">
+        <div class="benefit-subblock-title">Flexible Spending Account (FSA) — 2026 Contribution Limits</div>
+        <div class="benefit-subblock-row"><strong>Medical FSA:</strong><span>annual limit $3,300; up to $670 can roll over into 2026</span></div>
+        <div class="benefit-subblock-row"><strong>Dependent Care FSA:</strong><span>$5,000 per household; $2,500 if married and filing separately</span></div>
+      </div>
+      </details>
       <details class="benefit-item"><summary>🇨🇦 Canada</summary><ul>
         <li>Health, dental, and vision insurance</li>
         <li>12 paid sick days per calendar year</li>
