@@ -358,39 +358,19 @@ body {
 /* Card footer */
 .card-footer {
   padding: 0 16px 18px;
-  display: flex; flex-direction: column; gap: 8px;
+  display: flex;
   position: relative; z-index: 1;
   background: transparent;
 }
-.card-footer-row { display: flex; gap: 8px; }
-.btn-pdf {
-  flex: 1; padding: 11px; border-radius: 10px; border: none;
+.btn-slack {
+  width: 100%; padding: 11px; border-radius: 10px; border: none;
   background: var(--green); color: white;
   font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
   cursor: pointer; transition: background 0.15s;
   display: flex; align-items: center; justify-content: center; gap: 6px;
 }
-.btn-pdf:hover { background: var(--green-bright); }
-.btn-pdf:disabled { background: var(--border); color: var(--gray); cursor: not-allowed; }
-.btn-copy {
-  padding: 11px 16px; border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--white);
-  color: var(--gray);
-  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 13px; font-weight: 600;
-  cursor: pointer; transition: all 0.15s;
-}
-.btn-copy:hover { border-color: var(--green-mid); color: var(--green-dark); }
-.btn-slack {
-  width: 100%; padding: 11px; border-radius: 10px;
-  border: 1px solid var(--green-mid);
-  background: var(--green-light); color: var(--green-dark);
-  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 13px; font-weight: 700;
-  cursor: pointer; transition: all 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-.btn-slack:hover { background: var(--green); color: #fff; border-color: var(--green); }
-.btn-slack:disabled { background: var(--border); color: var(--gray); cursor: not-allowed; border-color: var(--border); }
+.btn-slack:hover { background: var(--green-bright); }
+.btn-slack:disabled { background: var(--border); color: var(--gray); cursor: not-allowed; }
 
 .stitch { display: none; }
 
@@ -465,8 +445,6 @@ body {
   .field-textarea { min-height: 80px; }
 
   /* Buttons */
-  .btn-pdf { padding: 12px; font-size: 14px; }
-  .btn-copy { padding: 12px 14px; font-size: 14px; }
   .btn-slack { padding: 12px; font-size: 14px; }
 
   /* Footer */
@@ -476,8 +454,6 @@ body {
 @media (max-width: 400px) {
   .hero-title { font-size: 40px; }
   .hero-eyebrow { font-size: 9px; letter-spacing: 0.12em; }
-  .card-footer-row { flex-direction: column; }
-  .btn-copy { width: 100%; text-align: center; }
 }
 
 /* ── LOGO ── */
@@ -521,8 +497,7 @@ body {
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Describe what this Breaker did that made the whole team better…" data-field="desc"></textarea></div>
       </div>
       <div class="card-footer">
-        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
-        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Cheers for Peers</button>
       </div>
     </div>
     <div class="card theme-green" data-cat="individual">
@@ -533,8 +508,7 @@ body {
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Highlight the consistent, high-quality execution that earned this award…" data-field="desc"></textarea></div>
       </div>
       <div class="card-footer">
-        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
-        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Cheers for Peers</button>
       </div>
     </div>
     <div class="card theme-gold" data-cat="individual">
@@ -545,8 +519,7 @@ body {
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Describe how this Breaker caught every detail, prevented issues, or protected the team…" data-field="desc"></textarea></div>
       </div>
       <div class="card-footer">
-        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
-        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Cheers for Peers</button>
       </div>
     </div>
     <div class="card theme-red" data-cat="individual">
@@ -557,8 +530,7 @@ body {
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Highlight how this Breaker embodies Daybreak's culture and lifts others around them…" data-field="desc"></textarea></div>
       </div>
       <div class="card-footer">
-        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
-        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Cheers for Peers</button>
       </div>
     </div>
     <div class="card theme-purple" data-cat="individual">
@@ -569,8 +541,7 @@ body {
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Describe the tangible results and impact this Breaker created for the team or product…" data-field="desc"></textarea></div>
       </div>
       <div class="card-footer">
-        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
-        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Cheers for Peers</button>
       </div>
     </div>
 
@@ -582,8 +553,7 @@ body {
         <div class="field-group"><label class="field-label">Recognition</label><textarea class="field-textarea" placeholder="Share how this Breaker showed up with kindness, empathy, and heart for others…" data-field="desc"></textarea></div>
       </div>
       <div class="card-footer">
-        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
-        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Cheers for Peers</button>
       </div>
     </div>
     <div class="card theme-team" data-cat="team">
@@ -595,8 +565,7 @@ body {
         <div class="field-group"><label class="field-label">What the Team Achieved</label><textarea class="field-textarea" placeholder="Describe the project, milestone, or moment this team crushed it together…" data-field="desc"></textarea></div>
       </div>
       <div class="card-footer">
-        <div class="card-footer-row"><button class="btn-pdf" onclick="savePDF(this.closest('.card'))">⬇ Save as PDF</button><button class="btn-copy" onclick="copyCard(this.closest('.card'))">Copy</button></div>
-        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Slack</button>
+        <button class="btn-slack" onclick="sendToSlack(this.closest('.card'))">📤 Send to Cheers for Peers</button>
       </div>
     </div>
   </div>
@@ -685,27 +654,6 @@ body {
     return { pdf, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle };
   }
 
-  async function savePDF(card) {
-    const btn = card.querySelector('.btn-pdf');
-    btn.disabled = true;
-    btn.textContent = '⏳ Generating…';
-
-    try {
-      const { pdf, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle } = await buildCardPdf(card);
-      pdf.save(`daybreak_${safeTitle}_${safeName}.pdf`);
-
-      // ── Silent log ──
-      logNomination(titleText, nameVal, nominatorVal, descVal);
-
-      btn.textContent = '✓ Downloaded!';
-      setTimeout(() => { btn.disabled = false; btn.textContent = '⬇ Save as PDF'; }, 3000);
-    } catch(err) {
-      console.error(err);
-      btn.disabled = false;
-      btn.textContent = '⬇ Save as PDF';
-    }
-  }
-
   async function sendToSlack(card) {
     const btn = card.querySelector('.btn-slack');
     btn.disabled = true;
@@ -729,27 +677,13 @@ body {
       logNomination(titleText, nameVal, nominatorVal, descVal);
 
       btn.textContent = '✓ Sent!';
-      setTimeout(() => { btn.disabled = false; btn.textContent = '📤 Send to Slack'; }, 3000);
+      setTimeout(() => { btn.disabled = false; btn.textContent = '📤 Send to Cheers for Peers'; }, 3000);
     } catch(err) {
       console.error(err);
       btn.disabled = false;
       btn.textContent = '⚠ Failed — retry';
-      setTimeout(() => { btn.textContent = '📤 Send to Slack'; }, 3000);
+      setTimeout(() => { btn.textContent = '📤 Send to Cheers for Peers'; }, 3000);
     }
-  }
-
-  function copyCard(card) {
-    const fields = card.querySelectorAll('[data-field]');
-    let text = '';
-    fields.forEach(f => {
-      const label = f.previousElementSibling?.textContent || f.dataset.field;
-      text += `${label}: ${f.value || '—'}\n`;
-    });
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = card.querySelector('.btn-copy');
-      btn.textContent = '✓ Copied!';
-      setTimeout(() => btn.textContent = 'Copy', 2000);
-    });
   }
 </script>
 </body>
