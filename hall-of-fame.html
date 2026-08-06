@@ -617,7 +617,7 @@ body {
     localStorage.setItem(LOG_KEY, JSON.stringify(existing));
   }
 
-  async function buildCardPdf(card, { scale = 3, format = 'PNG' } = {}) {
+  async function buildCardPdf(card, { scale = 3, quality = 0.95 } = {}) {
     const nameVal      = card.querySelector('[data-field="name"]')?.value.trim()      || '';
     const nominatorVal = card.querySelector('[data-field="nominator"]')?.value.trim() || '';
     const descVal      = card.querySelector('[data-field="desc"]')?.value.trim()      || '';
@@ -632,7 +632,7 @@ body {
       canvas = await html2canvas(card, {
         scale,
         useCORS: true,
-        backgroundColor: format === 'JPEG' ? '#ffffff' : null,
+        backgroundColor: '#ffffff',
         logging: false,
         scrollX: 0,
         scrollY: -window.scrollY,
@@ -641,12 +641,13 @@ body {
       footer.style.display = '';
     }
 
+    // JPEG, not PNG: jsPDF embeds PNGs as raw decoded pixels (huge), but
+    // reuses a JPEG's own compressed byte stream directly (tiny).
     const mmW = (canvas.width  / scale) * 0.2646;
     const mmH = (canvas.height / scale) * 0.2646;
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [mmW, mmH] });
-    const dataUrl = format === 'JPEG' ? canvas.toDataURL('image/jpeg', 0.82) : canvas.toDataURL('image/png');
-    pdf.addImage(dataUrl, format, 0, 0, mmW, mmH);
+    pdf.addImage(canvas.toDataURL('image/jpeg', quality), 'JPEG', 0, 0, mmW, mmH);
 
     const safeName  = (nameVal || 'breaker').replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const safeTitle = titleText.replace(/[^a-z0-9]/gi, '_').toLowerCase();
@@ -660,7 +661,7 @@ body {
     btn.textContent = '⏳ Sending…';
 
     try {
-      const { pdf, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle } = await buildCardPdf(card, { scale: 2, format: 'JPEG' });
+      const { pdf, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle } = await buildCardPdf(card);
       const pdfBase64 = pdf.output('datauristring').split(',')[1];
       const filename = `daybreak_${safeTitle}_${safeName}.pdf`;
       const message = `🏆 *${titleText}* nomination for *${nameVal || 'a Breaker'}*, submitted by ${nominatorVal || 'Anonymous'}.`;
