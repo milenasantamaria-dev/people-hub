@@ -356,6 +356,8 @@ body {
   display: none; flex-direction: column; gap: 2px; z-index: 200;
 }
 .nav-dropdown.open { display: flex; }
+.nav-group:hover .nav-dropdown { display: flex; }
+.nav-group:hover .nav-chevron { transform: rotate(180deg); }
 .nav-dropdown a {
   display: flex; align-items: center; gap: 10px;
   padding: 9px 12px; border-radius: 9px; color: var(--dark);
