@@ -801,6 +801,10 @@ function showView(view) {
   document.querySelectorAll('.view-panel').forEach(p => p.classList.toggle('active', p.dataset.view === view));
   document.querySelectorAll('.nav-btn-top').forEach(b => b.classList.toggle('active', b.dataset.menu === 'menu-' + view));
   localStorage.setItem('peopleHubView', view);
+  // Leaflet computes its size wrong if initialized (or left) while hidden — fix it up whenever this view becomes visible.
+  if (view === 'locations' && window.map) {
+    setTimeout(() => window.map.invalidateSize(), 0);
+  }
 }
 
 // ── RESTORE LAST VIEW ON PAGE LOAD (so a refresh stays where you were) ──
@@ -867,6 +871,7 @@ const map = L.map('map', {
   zoomControl: true, scrollWheelZoom: false,
   attributionControl: false, minZoom: 1.5, maxZoom: 5,
 });
+window.map = map;
 
 // Light tile layer matching white theme
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
