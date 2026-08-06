@@ -8,6 +8,17 @@
 // env var — #cheers-for-peers, where the Breaker Awards bot was invited.
 const SLACK_CHANNEL_ID = 'C09B6UYTM7W';
 
+// Vercel's default body-parser limit for serverless functions is 1mb,
+// which the base64-encoded PDF can exceed. Raise it (well under the
+// platform's hard ~4.5mb request-size ceiling).
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '4mb',
+    },
+  },
+};
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
