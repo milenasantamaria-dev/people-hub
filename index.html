@@ -387,6 +387,12 @@ body {
 .benefit-item li strong { color: var(--dark); }
 .benefit-item li ul { margin-top: 4px; margin-bottom: 0; }
 .benefit-item li ul li { margin-bottom: 2px; }
+.benefit-category {
+  font-size: 11px; font-weight: 800; color: var(--green-dark); text-transform: uppercase;
+  letter-spacing: 0.05em; margin-top: 16px;
+}
+.benefit-item > .benefit-category:first-child { margin-top: 2px; }
+.benefit-item > ul { margin-top: 8px; }
 .benefit-subblock {
   margin-top: 14px; background: var(--white); border: 1px solid var(--border);
   border-radius: 10px; padding: 12px 14px;
@@ -695,39 +701,96 @@ body {
     </div>
     <p class="map-mini-text">Open a location to see the benefits available to Breakers based there.</p>
     <div class="map-wrap" style="display:flex;flex-direction:column;gap:10px;">
-      <details class="benefit-item"><summary>🇺🇸 United States</summary><ul>
-        <li>Medical, vision, and dental insurance</li>
-        <li>12 paid sick days per calendar year</li>
-        <li>Maternity and parental leave</li>
-        <li>Short-term/long-term disability and life insurance — automatically enrolled</li>
-        <li><strong>401(k) (Empower):</strong> automatically enrolled at 5% self-contribution</li>
-        <li><strong>Phone &amp; internet stipend:</strong> $50/month for VPs and above, and Breakers in Recruiting, Sales (Account Executives, Business Development), or Professional Services · $35/month for all other Breakers</li>
-      </ul>
-      <div class="benefit-subblock">
-        <div class="benefit-subblock-title">Flexible Spending Account (FSA) — 2026 Contribution Limits</div>
-        <div class="benefit-subblock-row"><strong>Medical FSA:</strong><span>annual limit $3,300; up to $670 can roll over into 2026</span></div>
-        <div class="benefit-subblock-row"><strong>Dependent Care FSA:</strong><span>$5,000 per household; $2,500 if married and filing separately</span></div>
-      </div>
+      <details class="benefit-item"><summary>🇺🇸 United States</summary>
+        <div class="benefit-category">Health &amp; Insurance Benefits</div>
+        <ul>
+          <li>Medical, vision, and dental insurance (managed via PayChex/BeneAdmin)</li>
+          <li><strong>FSA (Flexible Spending Account)</strong> — see 2026 contribution limits below</li>
+          <li><strong>HSA (Health Savings Account):</strong> for employees enrolled in an HDHP with no active FSA</li>
+          <li><strong>401(k) retirement plan (Empower):</strong> automatically enrolled at 5% self-contribution</li>
+          <li>Short-term/long-term disability and life insurance — automatically enrolled</li>
+          <li>Commuter Benefits (transportation)</li>
+          <li>Annual Benefits Open Enrollment</li>
+        </ul>
+        <div class="benefit-subblock">
+          <div class="benefit-subblock-title">FSA — 2026 Contribution Limits</div>
+          <div class="benefit-subblock-row"><strong>Medical FSA:</strong><span>annual limit $3,300; up to $670 can roll over into 2026</span></div>
+          <div class="benefit-subblock-row"><strong>Dependent Care FSA:</strong><span>$5,000 per household; $2,500 if married and filing separately</span></div>
+        </div>
+        <div class="benefit-category">Compensation &amp; Payroll</div>
+        <ul>
+          <li><strong>Multi-state taxation:</strong> withholding based on Resident State vs. Work State, with a 10-day non-resident threshold</li>
+          <li><strong>Overtime pay (FLSA):</strong> over 40 hrs/week; in California, over 8 hrs/day up to 12, and the first 8 hrs on the 7th consecutive workday — no comp time in lieu of overtime</li>
+          <li><strong>Phone &amp; internet stipend:</strong> $50/month for VPs and above, and Breakers in Recruiting, Sales (Account Executives, Business Development), or Professional Services · $35/month for all other Breakers</li>
+        </ul>
+        <div class="benefit-category">Time Off</div>
+        <ul>
+          <li><strong>Flexible Time Off (FTO):</strong> no fixed limit, doesn't accrue, not paid out at separation</li>
+          <li>12 paid sick days per calendar year</li>
+          <li>Maternity and parental leave</li>
+          <li>Paid company holidays per the US Holiday Calendar</li>
+        </ul>
       </details>
-      <details class="benefit-item"><summary>🇨🇦 Canada</summary><ul>
-        <li>Health, dental, and vision insurance</li>
-        <li>12 paid sick days per calendar year</li>
-        <li>Maternity and parental leave</li>
-        <li>Flexible Time Off (FTO)</li>
-      </ul></details>
-      <details class="benefit-item"><summary>🇮🇳 India</summary><p>Coming soon.</p></details>
-      <details class="benefit-item"><summary>🇨🇴 Colombia</summary><ul>
-        <li>Health, dental, and vision insurance</li>
-        <li>12 paid sick days per calendar year</li>
-        <li>Maternity and parental leave</li>
-        <li>Flexible Time Off (FTO)</li>
-      </ul></details>
-      <details class="benefit-item"><summary>🇨🇷 Costa Rica</summary><ul>
-        <li>Health, dental, and vision insurance</li>
-        <li>12 paid sick days per calendar year</li>
-        <li>Maternity and parental leave</li>
-        <li>Flexible Time Off (FTO)</li>
-      </ul></details>
+      <details class="benefit-item"><summary>🇨🇦 Canada</summary>
+        <div class="benefit-category">Health &amp; Insurance Benefits</div>
+        <ul>
+          <li>Health, dental, and vision insurance</li>
+        </ul>
+        <div class="benefit-category">Time Off</div>
+        <ul>
+          <li>12 paid sick days per calendar year</li>
+          <li>Maternity and parental leave</li>
+          <li>Flexible Time Off (FTO)</li>
+        </ul>
+      </details>
+      <details class="benefit-item"><summary>🇮🇳 India</summary>
+        <div class="benefit-category">Health &amp; Insurance Benefits</div>
+        <ul>
+          <li>Health insurance sum insured: ₹20,00,000</li>
+          <li>Accidental cover: ₹50,00,000</li>
+          <li>Maternity coverage: ₹1,50,000</li>
+          <li>Family coverage includes up to 2 parents/parents-in-law</li>
+        </ul>
+        <div class="benefit-category">Compensation &amp; Payroll</div>
+        <ul>
+          <li><strong>PF (Provident Fund):</strong> 12% on basic salary</li>
+        </ul>
+        <div class="benefit-category">Time Off</div>
+        <ul>
+          <li><strong>Flexible Time Off (FTO):</strong> no fixed day limit, for vacation/leisure/personal time; doesn't accrue and isn't paid out on separation</li>
+          <li><strong>Probationary PTO:</strong> 3 days during the probation period (expires at confirmation, not encashed)</li>
+          <li><strong>Paid Holidays:</strong> 12 company-declared holidays per year (see the 2026 India Holidays calendar)</li>
+          <li><strong>Paid Sick Leave:</strong> up to 12 days/year, carryover capped at 5 days, account balance capped at 17 days total</li>
+          <li><strong>Maternity Leave:</strong> up to 26 weeks (max 8 weeks before expected delivery) for the first two children; 12 weeks for a 3rd child or for adoption of a child under 3 months; 45 days paid leave in case of miscarriage</li>
+          <li><strong>Paternity Leave:</strong> 10 working days, to be used within 30 days of the child's birth</li>
+          <li><strong>Bereavement/Funeral Leave:</strong> 2 weeks for immediate family, 5 days for non-immediate family</li>
+          <li><strong>Personal Leave of Absence (Leave Without Pay/LWP):</strong> available for personal matters, civic service, or work-related studies, subject to manager and People Team approval</li>
+        </ul>
+      </details>
+      <details class="benefit-item"><summary>🇨🇴 Colombia</summary>
+        <div class="benefit-category">Health &amp; Insurance Benefits</div>
+        <ul>
+          <li>Health, dental, and vision insurance</li>
+        </ul>
+        <div class="benefit-category">Time Off</div>
+        <ul>
+          <li>12 paid sick days per calendar year</li>
+          <li>Maternity and parental leave</li>
+          <li>Flexible Time Off (FTO)</li>
+        </ul>
+      </details>
+      <details class="benefit-item"><summary>🇨🇷 Costa Rica</summary>
+        <div class="benefit-category">Health &amp; Insurance Benefits</div>
+        <ul>
+          <li>Health, dental, and vision insurance</li>
+        </ul>
+        <div class="benefit-category">Time Off</div>
+        <ul>
+          <li>12 paid sick days per calendar year</li>
+          <li>Maternity and parental leave</li>
+          <li>Flexible Time Off (FTO)</li>
+        </ul>
+      </details>
     </div>
   </div>
 
