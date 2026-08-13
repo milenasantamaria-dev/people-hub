@@ -48,15 +48,74 @@ const HEADERS = [
   "Notes"
 ];
 
+function jsonOut(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Sends a 6 digit access code to the given email, same login mechanism as
+// the Recruitment Request tool (in place of Google OAuth, which would need
+// a Client ID set up in Google Cloud Console). The code lives in Apps
+// Script's own cache, no sheet or third party service needed.
+function handleSendCode(data) {
+  const email = String(data.email || "").trim().toLowerCase();
+  if (!email.endsWith("@" + ALLOWED_DOMAIN)) {
+    return jsonOut({ success: false, error: "You must use a @" + ALLOWED_DOMAIN + " email" });
+  }
+
+  const cache = CacheService.getScriptCache();
+  const throttleKey = "throttle_" + email;
+  if (cache.get(throttleKey)) {
+    return jsonOut({ success: false, error: "Please wait a few seconds before requesting another code." });
+  }
+
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  cache.put("code_" + email, code, 600); // expires in 10 minutes
+  cache.put(throttleKey, "1", 30); // 30s throttle between sends
+
+  MailApp.sendEmail({
+    to: email,
+    subject: "Your access code — Daybreak Referrals",
+    body: "Your access code is: " + code + "\n\nThis code expires in 10 minutes.\n\nIf you didn't request this code, you can ignore this email."
+  });
+
+  return jsonOut({ success: true });
+}
+
+function handleVerifyCode(data) {
+  const email = String(data.email || "").trim().toLowerCase();
+  const code = String(data.code || "").trim();
+  if (!email.endsWith("@" + ALLOWED_DOMAIN)) {
+    return jsonOut({ success: false, error: "Invalid email." });
+  }
+
+  const cache = CacheService.getScriptCache();
+  const stored = cache.get("code_" + email);
+  if (!stored || stored !== code) {
+    return jsonOut({ success: false, error: "Incorrect or expired code." });
+  }
+
+  cache.remove("code_" + email); // one-time use
+  return jsonOut({ success: true, email: email });
+}
+
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
 
+    if (data.action === "sendCode") {
+      return handleSendCode(data);
+    }
+    if (data.action === "verifyCode") {
+      return handleVerifyCode(data);
+    }
+
     // Defense in depth: the deployment itself is public (Apps Script can't
     // combine domain-restricted access with a page that reads the response
     // via fetch), so this rejects anything not tied to a @daybreak.ai
-    // requester, in case the client-side Google sign-in gate is ever
-    // bypassed. Same pattern as the Recruitment Request script.
+    // requester, in case the client-side login gate is ever bypassed. Same
+    // pattern as the Recruitment Request script.
     if (!data.referrerEmail || !String(data.referrerEmail).toLowerCase().endsWith("@" + ALLOWED_DOMAIN)) {
       return ContentService
         .createTextOutput(JSON.stringify({ success: false, error: "Unauthorized: referrer is not a @" + ALLOWED_DOMAIN + " account." }))

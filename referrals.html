@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Referral Program — Daybreak AI</title>
+<title>Referrals Daybreak</title>
 <link rel="icon" type="image/png" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 @font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-Light-V1.123.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-LightItalic-V1.123.woff2') format('woff2'); font-weight: 300; font-style: italic; font-display: swap; }
@@ -22,6 +21,8 @@
   --green-bright: #2C9950;
   --green-light: #E3F5E9;
   --green-mid: #94D1A7;
+  --lime: #B1D93C;
+  --lime-light: #D9EC98;
   --dark: #222222;
   --gray: #858585;
   --gray-light: #EFEFEF;
@@ -32,13 +33,13 @@
 
 body {
   font-family: 'Aeonik', 'Manrope', sans-serif;
+  background: #F6F6F6;
   color: var(--dark);
   min-height: 100vh;
   overflow-x: hidden;
-  background: #F6F6F6;
 }
 
-/* ── NAVBAR (matches hall-of-fame.html / admin.html) ── */
+/* ── NAVBAR ── */
 .site-navbar {
   position: sticky; top: 0; z-index: 200;
   display: flex; align-items: center; justify-content: space-between;
@@ -64,156 +65,81 @@ body {
 }
 .btn-hub-dark:hover { background: var(--green); color: #fff; border-color: var(--green); }
 
-/* ── SECTION HEADER (matches hall-of-fame.html) ── */
-.section-header {
-  text-align: center;
-  padding: 56px 24px 8px;
-  max-width: 640px;
-  margin: 0 auto;
+/* ── HERO ── */
+.header {
+  position: relative; text-align: center; overflow: hidden; padding: 64px 24px 56px;
 }
-.section-eyebrow {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--green-dark);
-  margin-bottom: 12px;
+.header::before {
+  content: ''; position: absolute; top: -30%; right: -5%; width: 50%; height: 160%;
+  background: radial-gradient(circle, var(--green-mid) 0%, rgba(148,209,167,0.25) 55%, rgba(148,209,167,0) 75%);
+  filter: blur(10px); z-index: 0; pointer-events: none;
 }
-.section-title {
-  font-size: clamp(34px, 5vw, 52px);
-  font-weight: 700;
-  color: var(--dark);
-  letter-spacing: -0.03em;
-  line-height: 1.05;
-  margin-bottom: 14px;
+.header > * { position: relative; z-index: 1; }
+.header-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--green-dark); margin-bottom: 14px;
 }
-.section-desc {
-  font-size: 15px;
-  color: var(--gray);
-  max-width: 480px;
-  margin: 0 auto;
-  line-height: 1.6;
+.header-title {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 700; letter-spacing: -0.02em; line-height: 1.1;
+  color: var(--dark); margin-bottom: 14px;
 }
-.signed-in-as {
-  font-size: 12px;
-  color: var(--green-dark);
-  font-weight: 600;
-  margin-top: 16px;
+.header-title span { color: var(--green-dark); }
+.header-desc {
+  font-size: 16px; color: var(--gray);
+  max-width: 480px; margin: 0 auto; line-height: 1.6;
 }
 
-/* ── LOGIN GATE ── */
-#loginGate { min-height: calc(100vh - 58px); display: flex; align-items: center; justify-content: center; padding: 24px; }
-.login-card { background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 40px 32px; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
-.login-card .login-icon { font-size: 40px; margin-bottom: 14px; }
-.login-card h1 { font-size: 19px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
-.login-card p { font-size: 13px; color: var(--gray); line-height: 1.6; margin-bottom: 22px; }
-#gsiButton { display: flex; justify-content: center; }
-.login-error { display: none; margin-top: 14px; background: #FDECEC; border: 1px solid #F3B8B8; color: #B23A3A; font-size: 12px; padding: 9px 12px; border-radius: 10px; line-height: 1.5; }
-
-/* ── FORM AREA ── */
-.form-wrap { max-width: 640px; margin: 0 auto; padding: 32px 24px 100px; display: flex; flex-direction: column; gap: 24px; }
-
-.card {
-  border-radius: 20px;
-  overflow: hidden;
-  background: var(--white);
-  border: 1px solid var(--border);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  position: relative;
+/* ── FORM ── */
+.form-wrap { max-width: 600px; margin: 0 auto; padding: 0 24px 80px; }
+.form-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 20px;
+  padding: 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
-.card::before {
-  content: '';
-  position: absolute; top: 0; left: 28px; width: 32px; height: 4px;
-  border-radius: 0 0 3px 3px;
-  background: var(--green);
-  z-index: 1;
-}
-.card-header { padding: 28px 24px 18px; position: relative; z-index: 1; display: flex; flex-direction: column; }
-.award-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 100px; margin-bottom: 16px;
-  width: fit-content;
-  background: var(--green-light); border: 1px solid var(--green-mid); color: var(--green-dark);
-}
-.award-icon-wrap {
-  width: 56px; height: 56px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 14px;
-  background: var(--green-light); border: 1px solid var(--green-mid);
-}
-.award-icon { font-size: 26px; display: block; }
-.award-title { font-size: 20px; font-weight: 800; line-height: 1.15; margin-bottom: 5px; color: var(--dark); }
-.award-subtitle { font-size: 12.5px; font-weight: 500; color: var(--gray); }
-
-.card-body {
-  margin: 0 16px 16px;
-  background: var(--gray-light);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: relative;
-  z-index: 1;
-}
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
-.field-group { display: flex; flex-direction: column; gap: 5px; }
+.field-group { margin-bottom: 18px; }
 .field-label {
-  font-size: 10px; font-weight: 800; letter-spacing: 0.14em;
-  text-transform: uppercase; color: var(--gray);
+  display: block; font-size: 11px; font-weight: 800; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--gray); margin-bottom: 6px;
 }
-.field-req { color: var(--green-dark); margin-left: 2px; }
-.field-opt { text-transform: none; font-weight: 500; letter-spacing: 0; color: #B0B0B0; margin-left: 4px; }
 .field-input, .field-textarea, .field-select {
-  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 14px; font-weight: 500;
-  color: var(--dark);
-  border: 1px solid var(--border); border-radius: 10px; padding: 9px 12px;
-  background: var(--white); width: 100%;
-  transition: border-color 0.15s, background 0.15s; resize: none; outline: none;
+  width: 100%; font-family: inherit; font-size: 14px; color: var(--dark);
+  border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px;
+  background: var(--gray-light); transition: border-color 0.15s, background 0.15s; outline: none;
 }
-.field-input:focus, .field-textarea:focus, .field-select:focus { border-color: var(--green-mid); background: var(--white); }
-.field-input::placeholder, .field-textarea::placeholder { color: #B0B0B0; font-weight: 400; }
-.field-textarea { min-height: 72px; line-height: 1.5; }
-.field-select { appearance: none; cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23858585' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 12px center; padding-right: 34px;
+.field-input:focus, .field-textarea:focus, .field-select:focus {
+  border-color: var(--green-mid); background: var(--white);
 }
-.field-file-wrap {
-  border: 1.5px dashed var(--border); border-radius: 10px; padding: 14px 12px;
-  background: var(--white); display: flex; align-items: center; gap: 10px;
-  transition: border-color 0.15s;
-}
-.field-file-wrap:has(input:focus) { border-color: var(--green-mid); }
-.field-file-wrap input[type=file] {
-  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 12.5px; color: var(--dark); width: 100%;
-}
-.field-file-name { font-size: 11px; color: var(--green-dark); font-weight: 600; margin-top: 4px; }
+.field-textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
 
-.card-footer { padding: 0 16px 20px; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
 .btn-submit {
-  width: 100%; padding: 13px; border-radius: 10px; border: none;
+  width: 100%; padding: 13px; border-radius: 12px; border: none;
   background: var(--green); color: white;
-  font-family: 'Aeonik', 'Manrope', sans-serif; font-size: 14px; font-weight: 700;
+  font-family: inherit; font-size: 14px; font-weight: 700;
   cursor: pointer; transition: background 0.15s;
   display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-top: 6px;
 }
 .btn-submit:hover { background: var(--green-bright); }
-.btn-submit:disabled { background: var(--border); color: var(--gray); cursor: not-allowed; }
-.submit-note { text-align: center; font-size: 11px; color: var(--gray); }
 
-/* ── SUCCESS ── */
-.success { display: none; text-align: center; padding: 60px 24px; max-width: 480px; margin: 0 auto; }
-.success .si { width: 68px; height: 68px; border-radius: 50%; background: var(--green-light); border: 1px solid var(--green-mid); display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; font-size: 30px; }
-.success h2 { font-size: 21px; font-weight: 800; margin-bottom: 8px; }
-.success p { color: var(--gray); font-size: 13.5px; line-height: 1.6; }
-.success .btn-submit { margin-top: 24px; max-width: 260px; margin-left: auto; margin-right: auto; }
+.confirm-box {
+  display: none; text-align: center; padding: 40px 20px;
+}
+.confirm-box.show { display: block; }
+.confirm-icon { font-size: 40px; margin-bottom: 14px; }
+.confirm-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
+.confirm-desc { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+.page-footer {
+  max-width: 1100px; margin: 0 auto; text-align: center;
+  padding: 32px 24px 60px; border-top: 1px solid var(--border);
+}
+.page-footer p { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #C0C8C0; }
+.page-footer span { color: var(--green-dark); }
 </style>
 </head>
 <body>
-
 <nav class="site-navbar">
   <a class="site-navbar-brand" href="https://people-hub.vercel.app/">
     <span class="site-navbar-logo"></span>
@@ -222,223 +148,85 @@ body {
   <a class="btn-hub-dark" href="https://people-hub.vercel.app/">🏠 People Hub</a>
 </nav>
 
-<div id="loginGate">
-  <div class="login-card">
-    <div class="login-icon">🤝</div>
-    <h1>Referral Program</h1>
-    <p>Sign in with your @daybreak.ai Google account to submit a referral.</p>
-    <div id="gsiButton"></div>
-    <div class="login-error" id="loginError">That account is not a @daybreak.ai Google account. Please sign in with your Daybreak email.</div>
-  </div>
-</div>
-
-<div id="appContent" style="display:none">
-
-<div class="section-header">
-  <div class="section-eyebrow">Daybreak · Referral Program</div>
-  <h1 class="section-title">Refer a <span style="color:var(--green-dark);">Breaker</span></h1>
-  <p class="section-desc">Know someone who would crush it here? Put them in the lineup and the People Team will take it from there.</p>
-  <div class="signed-in-as" id="signedInAs"></div>
-</div>
+<header class="header">
+  <div class="header-eyebrow">Daybreak · Referrals</div>
+  <h1 class="header-title">Know someone <span>great?</span></h1>
+  <p class="header-desc">Help grow the Daybreak team with people you trust and believe in. Fill in a few details and People Ops takes it from there.</p>
+</header>
 
 <div class="form-wrap">
+  <div class="form-card">
+    <form id="referralForm">
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Your Name</label>
+          <input class="field-input" type="text" id="yourName" required>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Your Email</label>
+          <input class="field-input" type="email" id="yourEmail" required>
+        </div>
+      </div>
 
-  <form id="rf">
+      <div class="field-group">
+        <label class="field-label">Candidate's Name</label>
+        <input class="field-input" type="text" id="candidateName" required>
+      </div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="award-badge">Referral</div>
-        <div class="award-icon-wrap"><span class="award-icon">🤝</span></div>
-        <div class="award-title">About the Candidate</div>
-        <div class="award-subtitle">Tell us about the person you are recommending.</div>
+      <div class="field-group">
+        <label class="field-label">Candidate's Email or LinkedIn</label>
+        <input class="field-input" type="text" id="candidateContact" required>
       </div>
-      <div class="card-body">
-        <div class="field-row">
-          <div class="field-group">
-            <label class="field-label">Candidate Name<span class="field-req">*</span></label>
-            <input class="field-input" type="text" name="candidateName" required>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Candidate Email<span class="field-req">*</span></label>
-            <input class="field-input" type="email" name="candidateEmail" required>
-          </div>
-        </div>
-        <div class="field-row">
-          <div class="field-group">
-            <label class="field-label">Candidate Phone<span class="field-opt">optional</span></label>
-            <input class="field-input" type="tel" name="candidatePhone">
-          </div>
-          <div class="field-group">
-            <label class="field-label">Role<span class="field-req">*</span></label>
-            <select class="field-select" name="role" id="roleSelect" required>
-              <option value="">Loading roles...</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">LinkedIn Profile<span class="field-req">*</span></label>
-          <input class="field-input" type="url" name="linkedin" placeholder="https://linkedin.com/in/..." required>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Attach Resume / CV<span class="field-req">*</span></label>
-          <div class="field-file-wrap">
-            <input type="file" name="resume" id="resumeInput" accept=".pdf,.doc,.docx" required>
-          </div>
-          <div class="field-file-name" id="resumeFileName"></div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">How Do You Know Them?<span class="field-req">*</span></label>
-          <textarea class="field-textarea" name="relationship" placeholder="Former colleague, friend, met at a conference..." required></textarea>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Anything Else We Should Know?<span class="field-req">*</span></label>
-          <textarea class="field-textarea" name="notes" required></textarea>
-        </div>
+
+      <div class="field-group">
+        <label class="field-label">Role or Team You'd Recommend Them For</label>
+        <input class="field-input" type="text" id="roleFit" placeholder="e.g. Data Science, Sales, Engineering...">
       </div>
-      <div class="card-footer">
-        <button type="submit" class="btn-submit" id="submitBtn">📤 Submit Referral</button>
-        <div class="submit-note">Your referral goes straight to the People Team.</div>
+
+      <div class="field-group">
+        <label class="field-label">Why Do You Recommend Them?</label>
+        <textarea class="field-textarea" id="whyRecommend" placeholder="What makes them a great fit for Daybreak?" required></textarea>
       </div>
+
+      <button type="submit" class="btn-submit">🤝 Submit Referral</button>
+    </form>
+
+    <div class="confirm-box" id="confirmBox">
+      <div class="confirm-icon">✅</div>
+      <div class="confirm-title">Thanks for the referral!</div>
+      <p class="confirm-desc">Your email app should have opened with the details pre-filled — just hit send and People Ops will take it from there.</p>
     </div>
-
-  </form>
-
-  <div class="success" id="successBox">
-    <div class="si">🤝</div>
-    <h2>Thanks for the referral!</h2>
-    <p>The People Team has it now and will follow up with you if there is a fit. We really appreciate you helping grow the Daybreak team.</p>
-    <button type="button" class="btn-submit" onclick="location.reload()">Submit Another Referral</button>
   </div>
+</div>
 
-</div><!-- /form-wrap -->
-
-</div><!-- /appContent -->
+<footer class="page-footer">
+  <p>Daybreak · <span>People Hub</span></p>
+</footer>
 
 <script>
-const APPS_URL = "https://script.google.com/macros/s/AKfycbzNFzM6rZ0Q8TSA_l22mnoUBkH-4PZs9DTLj9PnE75g1XOAyR_bq6vHUJnW6Nxn1WlBfQ/exec";
-const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_OAUTH_CLIENT_ID_HERE.apps.googleusercontent.com";
-const ALLOWED_DOMAIN = "daybreak.ai";
-let currentUser = null;
-
-function decodeJwt(token){
-  const base64 = token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
-  const json = decodeURIComponent(atob(base64).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join(''));
-  return JSON.parse(json);
-}
-
-function handleCredentialResponse(response){
-  const payload = decodeJwt(response.credential);
-  const isAllowed = payload.email_verified && (payload.hd === ALLOWED_DOMAIN || (payload.email||'').toLowerCase().endsWith('@'+ALLOWED_DOMAIN));
-  if(!isAllowed){
-    document.getElementById('loginError').style.display = 'block';
-    if(window.google) google.accounts.id.disableAutoSelect();
-    return;
-  }
-  document.getElementById('loginError').style.display = 'none';
-  currentUser = { email: payload.email, name: payload.name || payload.email };
-  localStorage.setItem('referrals_user', JSON.stringify(currentUser));
-  showApp();
-}
-
-function showApp(){
-  document.getElementById('loginGate').style.display = 'none';
-  document.getElementById('appContent').style.display = 'block';
-  document.getElementById('signedInAs').textContent = 'Signed in as ' + currentUser.email;
-}
-
-window.addEventListener('load', function(){
-  if(window.google && google.accounts){
-    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleCredentialResponse });
-    google.accounts.id.renderButton(document.getElementById('gsiButton'), { theme:'outline', size:'large', text:'signin_with', width:280 });
-  }
-  const cached = localStorage.getItem('referrals_user');
-  if(cached){
-    try{ currentUser = JSON.parse(cached); showApp(); }catch(e){ localStorage.removeItem('referrals_user'); }
-  }
-  loadRoles();
-});
-
-async function loadRoles(){
-  const sel = document.getElementById('roleSelect');
-  if(APPS_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"){
-    sel.innerHTML = '<option value="">Not connected yet, see setup steps</option>';
-    return;
-  }
-  try{
-    const res = await fetch(APPS_URL + '?action=roles');
-    const data = await res.json();
-    if(!data || data.success === false) throw new Error(data && data.error || 'Unknown error');
-    if(!data.roles || !data.roles.length) throw new Error('No roles found');
-    sel.innerHTML = '<option value="">Select a role</option>' +
-      data.roles.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
-  }catch(err){
-    console.error('Failed to load roles', err);
-    sel.innerHTML = '<option value="">Could not load roles — refresh the page</option>';
-  }
-}
-
-function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-document.getElementById('resumeInput').addEventListener('change', function(e){
-  const f = e.target.files[0];
-  document.getElementById('resumeFileName').textContent = f ? f.name : '';
-});
-
-function fileToBase64(file){
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-document.getElementById('rf').addEventListener('submit', async function(e){
+document.getElementById('referralForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  const btn = document.getElementById('submitBtn');
-  const resumeFile = document.getElementById('resumeInput').files[0];
 
-  if(resumeFile && resumeFile.size > 15 * 1024 * 1024){
-    alert('That resume file is too large. Please attach a file smaller than 15MB.');
-    return;
-  }
+  const yourName = document.getElementById('yourName').value.trim();
+  const yourEmail = document.getElementById('yourEmail').value.trim();
+  const candidateName = document.getElementById('candidateName').value.trim();
+  const candidateContact = document.getElementById('candidateContact').value.trim();
+  const roleFit = document.getElementById('roleFit').value.trim();
+  const whyRecommend = document.getElementById('whyRecommend').value.trim();
 
-  btn.disabled = true;
-  btn.textContent = 'Submitting...';
+  const subject = `Referral: ${candidateName}`;
+  const body =
+    `Referred by: ${yourName} (${yourEmail})\n` +
+    `Candidate: ${candidateName}\n` +
+    `Candidate contact: ${candidateContact}\n` +
+    `Role/team fit: ${roleFit || 'Not specified'}\n\n` +
+    `Why they recommend them:\n${whyRecommend}`;
 
-  try{
-    const fd = Object.fromEntries(new FormData(e.target).entries());
-    delete fd.resume;
-    fd.referrerName = currentUser.name;
-    fd.referrerEmail = currentUser.email;
+  window.location.href = `mailto:milena.santamaria@daybreak.ai?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
-    if(resumeFile){
-      fd.resumeBase64 = await fileToBase64(resumeFile);
-      fd.resumeFileName = resumeFile.name;
-      fd.resumeMimeType = resumeFile.type;
-    }
-
-    if(APPS_URL !== "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"){
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 20000);
-      await fetch(APPS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(fd),
-        signal: controller.signal
-      });
-      clearTimeout(timeout);
-    }
-    document.getElementById('rf').style.display = 'none';
-    document.getElementById('successBox').style.display = 'block';
-  }catch(err){
-    alert('Something went wrong submitting your referral. Please try again.');
-    btn.disabled = false;
-    btn.textContent = '📤 Submit Referral';
-  }
+  document.getElementById('referralForm').style.display = 'none';
+  document.getElementById('confirmBox').classList.add('show');
 });
 </script>
-
 </body>
 </html>
