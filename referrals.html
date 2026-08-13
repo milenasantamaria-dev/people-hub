@@ -21,8 +21,6 @@
   --green-bright: #2C9950;
   --green-light: #E3F5E9;
   --green-mid: #94D1A7;
-  --lime: #B1D93C;
-  --lime-light: #D9EC98;
   --dark: #222222;
   --gray: #858585;
   --gray-light: #EFEFEF;
@@ -55,6 +53,7 @@ body {
   background-position: left center; background-size: 96.4px 26px;
 }
 .site-navbar-logo-text { font-size: 16px; font-weight: 800; color: var(--green); letter-spacing: -0.01em; }
+.nav-right { display: flex; align-items: center; gap: 10px; }
 .btn-hub-dark {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 16px; border-radius: 100px;
@@ -64,6 +63,11 @@ body {
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 .btn-hub-dark:hover { background: var(--green); color: #fff; border-color: var(--green); }
+.user-badge { display: none; align-items: center; gap: 8px; font-size: 12.5px; color: var(--gray); }
+.user-badge button {
+  background: none; border: 1px solid var(--border); border-radius: 100px;
+  padding: 5px 12px; font-family: inherit; font-size: 12px; color: var(--gray); cursor: pointer;
+}
 
 /* ── HERO ── */
 .header {
@@ -90,13 +94,15 @@ body {
   max-width: 480px; margin: 0 auto; line-height: 1.6;
 }
 
-/* ── FORM ── */
-.form-wrap { max-width: 600px; margin: 0 auto; padding: 0 24px 80px; }
-.form-card {
+/* ── SHARED CARD / FORM STYLES ── */
+.wrap { max-width: 600px; margin: 0 auto; padding: 0 24px 80px; }
+.card {
   background: var(--white); border: 1px solid var(--border); border-radius: 20px;
   padding: 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);
 }
 .field-group { margin-bottom: 18px; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
 .field-label {
   display: block; font-size: 11px; font-weight: 800; letter-spacing: 0.08em;
   text-transform: uppercase; color: var(--gray); margin-bottom: 6px;
@@ -109,9 +115,9 @@ body {
 .field-input:focus, .field-textarea:focus, .field-select:focus {
   border-color: var(--green-mid); background: var(--white);
 }
-.field-textarea { min-height: 100px; resize: vertical; line-height: 1.5; }
-.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+.field-textarea { min-height: 90px; resize: vertical; line-height: 1.5; }
+.field-select { cursor: pointer; }
+.field-hint { font-size: 12px; color: var(--gray); margin-top: 6px; }
 
 .btn-submit {
   width: 100%; padding: 13px; border-radius: 12px; border: none;
@@ -119,17 +125,26 @@ body {
   font-family: inherit; font-size: 14px; font-weight: 700;
   cursor: pointer; transition: background 0.15s;
   display: flex; align-items: center; justify-content: center; gap: 6px;
-  margin-top: 6px;
 }
 .btn-submit:hover { background: var(--green-bright); }
+.btn-submit:disabled { background: var(--border); color: var(--gray); cursor: not-allowed; }
 
-.confirm-box {
-  display: none; text-align: center; padding: 40px 20px;
+.login-error {
+  display: none; margin-top: 14px; background: #FEF2F2; border: 1px solid #FECACA;
+  color: #B91C1C; font-size: 12.5px; padding: 10px 13px; border-radius: 10px; line-height: 1.5;
 }
+.login-links { margin-top: 14px; font-size: 12px; text-align: center; }
+.login-links a { color: var(--gray); text-decoration: none; }
+.login-links a:hover { color: var(--green-dark); text-decoration: underline; }
+.login-desc { font-size: 14px; color: var(--gray); line-height: 1.6; margin-bottom: 16px; }
+.login-desc b { color: var(--dark); }
+
+.confirm-box { display: none; text-align: center; padding: 20px 0; }
 .confirm-box.show { display: block; }
 .confirm-icon { font-size: 40px; margin-bottom: 14px; }
 .confirm-title { font-size: 20px; font-weight: 800; color: var(--dark); margin-bottom: 8px; }
 .confirm-desc { font-size: 14px; color: var(--gray); line-height: 1.6; }
+.confirm-desc a { color: var(--green-dark); font-weight: 700; text-decoration: none; }
 
 .page-footer {
   max-width: 1100px; margin: 0 auto; text-align: center;
@@ -145,58 +160,108 @@ body {
     <span class="site-navbar-logo"></span>
     <span class="site-navbar-logo-text">daybreak</span>
   </a>
-  <a class="btn-hub-dark" href="https://people-hub.vercel.app/">🏠 People Hub</a>
+  <div class="nav-right">
+    <div class="user-badge" id="userBadge">
+      <span id="userBadgeEmail"></span>
+      <button type="button" onclick="signOut()">Sign out</button>
+    </div>
+    <a class="btn-hub-dark" href="https://people-hub.vercel.app/">🏠 People Hub</a>
+  </div>
 </nav>
 
 <header class="header">
   <div class="header-eyebrow">Daybreak · Referrals</div>
   <h1 class="header-title">Know someone <span>great?</span></h1>
-  <p class="header-desc">Help grow the Daybreak team with people you trust and believe in. Fill in a few details and People Ops takes it from there.</p>
+  <p class="header-desc">Help grow the Daybreak team with people you trust and believe in.</p>
 </header>
 
-<div class="form-wrap">
-  <div class="form-card">
-    <form id="referralForm">
-      <div class="field-row">
-        <div class="field-group">
-          <label class="field-label">Your Name</label>
-          <input class="field-input" type="text" id="yourName" required>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Your Email</label>
-          <input class="field-input" type="email" id="yourEmail" required>
-        </div>
-      </div>
+<div class="wrap">
 
+  <!-- LOGIN GATE -->
+  <div class="card" id="loginGate">
+    <div id="emailStep">
+      <p class="login-desc">Enter your <b>@daybreak.ai</b> email — we'll send you a 6-digit access code.</p>
+      <div class="field-group">
+        <label class="field-label">Your Email</label>
+        <input class="field-input" type="email" id="loginEmail" placeholder="you@daybreak.ai">
+      </div>
+      <button type="button" class="btn-submit" id="sendCodeBtn" onclick="sendCode()">Send Code</button>
+      <div class="login-error" id="loginError"></div>
+    </div>
+    <div id="codeStep" style="display:none">
+      <p class="login-desc">Enter the 6-digit code we sent to <b id="codeStepEmail"></b>.</p>
+      <div class="field-group">
+        <label class="field-label">Access Code</label>
+        <input class="field-input" type="text" id="loginCode" placeholder="123456" maxlength="6" inputmode="numeric" style="text-align:center;letter-spacing:6px;">
+      </div>
+      <button type="button" class="btn-submit" id="verifyCodeBtn" onclick="verifyCode()">Verify</button>
+      <div class="login-error" id="codeError"></div>
+      <div class="login-links">
+        <a href="#" onclick="backToEmailStep();return false;">Change email</a>
+        &nbsp;·&nbsp;
+        <a href="#" onclick="sendCode();return false;">Resend code</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFERRAL FORM (shown after login) -->
+  <div class="card" id="formCard" style="display:none">
+    <form id="referralForm">
       <div class="field-group">
         <label class="field-label">Candidate's Name</label>
         <input class="field-input" type="text" id="candidateName" required>
       </div>
 
-      <div class="field-group">
-        <label class="field-label">Candidate's Email or LinkedIn</label>
-        <input class="field-input" type="text" id="candidateContact" required>
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label">Candidate's Email</label>
+          <input class="field-input" type="email" id="candidateEmail">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Candidate's Phone</label>
+          <input class="field-input" type="text" id="candidatePhone">
+        </div>
       </div>
 
       <div class="field-group">
-        <label class="field-label">Role or Team You'd Recommend Them For</label>
-        <input class="field-input" type="text" id="roleFit" placeholder="e.g. Data Science, Sales, Engineering...">
+        <label class="field-label">Role They'd Be a Great Fit For</label>
+        <select class="field-select" id="roleSelect">
+          <option value="">Loading roles…</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">LinkedIn (optional)</label>
+        <input class="field-input" type="text" id="linkedin" placeholder="linkedin.com/in/...">
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Resume (optional)</label>
+        <input class="field-input" type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="padding:9px 13px;">
+        <div class="field-hint">PDF or Word, up to ~10MB.</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">How Do You Know Them?</label>
+        <input class="field-input" type="text" id="relationship" placeholder="e.g. Former colleague, friend, referred by a Breaker...">
       </div>
 
       <div class="field-group">
         <label class="field-label">Why Do You Recommend Them?</label>
-        <textarea class="field-textarea" id="whyRecommend" placeholder="What makes them a great fit for Daybreak?" required></textarea>
+        <textarea class="field-textarea" id="notes" placeholder="What makes them a great fit for Daybreak?"></textarea>
       </div>
 
-      <button type="submit" class="btn-submit">🤝 Submit Referral</button>
+      <button type="submit" class="btn-submit" id="submitBtn">🤝 Submit Referral</button>
+      <div class="login-error" id="submitError"></div>
     </form>
 
     <div class="confirm-box" id="confirmBox">
       <div class="confirm-icon">✅</div>
       <div class="confirm-title">Thanks for the referral!</div>
-      <p class="confirm-desc">Your email app should have opened with the details pre-filled — just hit send and People Ops will take it from there.</p>
+      <p class="confirm-desc">The People Team has it now — you'll get a confirmation at <span id="confirmEmail"></span>, and we'll follow up as it moves forward.</p>
     </div>
   </div>
+
 </div>
 
 <footer class="page-footer">
@@ -204,29 +269,203 @@ body {
 </footer>
 
 <script>
-document.getElementById('referralForm').addEventListener('submit', function(e) {
+const APPS_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+const ALLOWED_DOMAIN = "daybreak.ai";
+let currentUser = null;
+let pendingEmail = null;
+
+async function sendCode(){
+  const emailInput = document.getElementById('loginEmail');
+  const email = (pendingEmail || emailInput.value).trim().toLowerCase();
+  const btn = document.getElementById('sendCodeBtn');
+  const err = document.getElementById('loginError');
+  err.style.display = 'none';
+
+  if(!email.endsWith('@' + ALLOWED_DOMAIN)){
+    err.textContent = 'You must use a @' + ALLOWED_DOMAIN + ' email';
+    err.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Sending...';
+  try{
+    const res = await fetch(APPS_URL, { method: 'POST', body: JSON.stringify({ action: 'sendCode', email: email }) });
+    const data = await res.json();
+    if(!data.success){
+      err.textContent = data.error || 'Could not send the code.';
+      err.style.display = 'block';
+    } else {
+      pendingEmail = email;
+      document.getElementById('codeStepEmail').textContent = email;
+      document.getElementById('emailStep').style.display = 'none';
+      document.getElementById('codeStep').style.display = 'block';
+      document.getElementById('loginCode').value = '';
+      document.getElementById('loginCode').focus();
+    }
+  }catch(e){
+    err.textContent = 'Connection error. Please try again.';
+    err.style.display = 'block';
+  }
+  btn.disabled = false; btn.textContent = 'Send Code';
+}
+
+async function verifyCode(){
+  const code = document.getElementById('loginCode').value.trim();
+  const btn = document.getElementById('verifyCodeBtn');
+  const err = document.getElementById('codeError');
+  err.style.display = 'none';
+
+  if(!code){
+    err.textContent = 'Enter the code we sent you.';
+    err.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true; btn.textContent = 'Verifying...';
+  try{
+    const res = await fetch(APPS_URL, { method: 'POST', body: JSON.stringify({ action: 'verifyCode', email: pendingEmail, code: code }) });
+    const data = await res.json();
+    if(!data.success){
+      err.textContent = data.error || 'Incorrect code.';
+      err.style.display = 'block';
+    } else {
+      currentUser = { email: pendingEmail };
+      localStorage.setItem('db_referrals_user', JSON.stringify(currentUser));
+      showApp();
+    }
+  }catch(e){
+    err.textContent = 'Connection error. Please try again.';
+    err.style.display = 'block';
+  }
+  btn.disabled = false; btn.textContent = 'Verify';
+}
+
+function backToEmailStep(){
+  document.getElementById('codeStep').style.display = 'none';
+  document.getElementById('emailStep').style.display = 'block';
+  document.getElementById('codeError').style.display = 'none';
+  pendingEmail = null;
+}
+
+function showApp(){
+  document.getElementById('loginGate').style.display = 'none';
+  document.getElementById('formCard').style.display = 'block';
+  document.getElementById('userBadge').style.display = 'flex';
+  document.getElementById('userBadgeEmail').textContent = currentUser.email;
+  loadRoles();
+}
+
+function signOut(){
+  localStorage.removeItem('db_referrals_user');
+  currentUser = null;
+  document.getElementById('formCard').style.display = 'none';
+  document.getElementById('confirmBox').classList.remove('show');
+  document.getElementById('referralForm').style.display = 'block';
+  document.getElementById('userBadge').style.display = 'none';
+  document.getElementById('loginGate').style.display = 'block';
+  backToEmailStep();
+  document.getElementById('loginEmail').value = '';
+}
+
+// Plain GET, no custom headers — adding headers here forces a CORS
+// preflight that Apps Script web apps don't handle.
+async function loadRoles(){
+  const sel = document.getElementById('roleSelect');
+  try{
+    const res = await fetch(APPS_URL + '?action=roles');
+    const data = await res.json();
+    if(data.success && data.roles && data.roles.length){
+      sel.innerHTML = '<option value="">Select a role…</option>' +
+        data.roles.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+    } else {
+      sel.innerHTML = '<option value="">Could not load roles — type below</option>';
+    }
+  }catch(e){
+    sel.innerHTML = '<option value="">Could not load roles</option>';
+  }
+}
+
+function escapeHtml(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function fileToBase64(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+document.getElementById('referralForm').addEventListener('submit', async function(e){
   e.preventDefault();
 
-  const yourName = document.getElementById('yourName').value.trim();
-  const yourEmail = document.getElementById('yourEmail').value.trim();
+  const btn = document.getElementById('submitBtn');
+  const err = document.getElementById('submitError');
+  err.style.display = 'none';
+
   const candidateName = document.getElementById('candidateName').value.trim();
-  const candidateContact = document.getElementById('candidateContact').value.trim();
-  const roleFit = document.getElementById('roleFit').value.trim();
-  const whyRecommend = document.getElementById('whyRecommend').value.trim();
+  if(!candidateName){
+    err.textContent = 'Candidate name is required.';
+    err.style.display = 'block';
+    return;
+  }
 
-  const subject = `Referral: ${candidateName}`;
-  const body =
-    `Referred by: ${yourName} (${yourEmail})\n` +
-    `Candidate: ${candidateName}\n` +
-    `Candidate contact: ${candidateContact}\n` +
-    `Role/team fit: ${roleFit || 'Not specified'}\n\n` +
-    `Why they recommend them:\n${whyRecommend}`;
+  btn.disabled = true; btn.textContent = '⏳ Submitting…';
 
-  window.location.href = `mailto:milena.santamaria@daybreak.ai?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  try{
+    const resumeInput = document.getElementById('resumeFile');
+    let resumeBase64 = '', resumeMimeType = '', resumeFileName = '';
+    if(resumeInput.files && resumeInput.files[0]){
+      const file = resumeInput.files[0];
+      resumeBase64 = await fileToBase64(file);
+      resumeMimeType = file.type;
+      resumeFileName = file.name;
+    }
 
-  document.getElementById('referralForm').style.display = 'none';
-  document.getElementById('confirmBox').classList.add('show');
+    const payload = {
+      referrerEmail: currentUser.email,
+      referrerName: currentUser.email.split('@')[0],
+      candidateName: candidateName,
+      candidateEmail: document.getElementById('candidateEmail').value.trim(),
+      candidatePhone: document.getElementById('candidatePhone').value.trim(),
+      role: document.getElementById('roleSelect').value,
+      linkedin: document.getElementById('linkedin').value.trim(),
+      resumeBase64: resumeBase64,
+      resumeMimeType: resumeMimeType,
+      resumeFileName: resumeFileName,
+      relationship: document.getElementById('relationship').value.trim(),
+      notes: document.getElementById('notes').value.trim()
+    };
+
+    const res = await fetch(APPS_URL, { method: 'POST', body: JSON.stringify(payload) });
+    const data = await res.json();
+    if(!data.success){
+      err.textContent = data.error || 'Something went wrong. Please try again.';
+      err.style.display = 'block';
+      btn.disabled = false; btn.textContent = '🤝 Submit Referral';
+      return;
+    }
+
+    document.getElementById('confirmEmail').textContent = currentUser.email;
+    document.getElementById('referralForm').style.display = 'none';
+    document.getElementById('confirmBox').classList.add('show');
+  }catch(e){
+    err.textContent = 'Connection error. Please try again.';
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = '🤝 Submit Referral';
+  }
 });
+
+document.getElementById('loginEmail').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); sendCode(); } });
+document.getElementById('loginCode').addEventListener('keydown', function(e){ if(e.key === 'Enter'){ e.preventDefault(); verifyCode(); } });
+
+// Restore session on reload
+const cached = localStorage.getItem('db_referrals_user');
+if(cached){
+  try{ currentUser = JSON.parse(cached); showApp(); }catch(e){ localStorage.removeItem('db_referrals_user'); }
+}
 </script>
 </body>
 </html>
