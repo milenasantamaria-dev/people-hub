@@ -236,8 +236,8 @@ body {
       </div>
 
       <div class="field-group">
-        <label class="field-label">Resume (optional)</label>
-        <input class="field-input" type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="padding:9px 13px;">
+        <label class="field-label">Resume</label>
+        <input class="field-input" type="file" id="resumeFile" accept=".pdf,.doc,.docx" style="padding:9px 13px;" required>
         <div class="field-hint">PDF or Word, up to ~10MB.</div>
       </div>
 
@@ -412,10 +412,16 @@ document.getElementById('referralForm').addEventListener('submit', async functio
     return;
   }
 
+  const resumeInput = document.getElementById('resumeFile');
+  if(!resumeInput.files || !resumeInput.files[0]){
+    err.textContent = 'Please attach the candidate\'s resume.';
+    err.style.display = 'block';
+    return;
+  }
+
   btn.disabled = true; btn.textContent = '⏳ Submitting…';
 
   try{
-    const resumeInput = document.getElementById('resumeFile');
     let resumeBase64 = '', resumeMimeType = '', resumeFileName = '';
     if(resumeInput.files && resumeInput.files[0]){
       const file = resumeInput.files[0];
