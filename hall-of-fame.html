@@ -670,6 +670,17 @@ body {
     return { imageBase64, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle };
   }
 
+  // ?test=1 → every send goes to a private test channel, never the team channel.
+  const TEST_MODE = new URLSearchParams(location.search).has('test');
+  const SEND_LABEL = TEST_MODE ? '🧪 Send TEST (not to the team)' : '📤 Send to Cheers for Peers';
+  if (TEST_MODE) {
+    document.querySelectorAll('.btn-slack').forEach(b => b.textContent = SEND_LABEL);
+    const bar = document.createElement('div');
+    bar.textContent = '🧪 TEST MODE: cards are sent to the private test channel, not #cheers-for-peers.';
+    bar.style.cssText = 'background:#FFF4CC;color:#7A5B00;text-align:center;font-weight:700;font-size:13px;padding:8px 12px;';
+    document.body.prepend(bar);
+  }
+
   async function sendToSlack(card) {
     const btn = card.querySelector('.btn-slack');
     btn.disabled = true;
@@ -682,21 +693,21 @@ body {
       const res = await fetch('/api/send-to-slack', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ imageBase64, filename, title: titleText, breakerName: nameVal, nominator: nominatorVal, recognition: descVal }),
+        body: JSON.stringify({ imageBase64, filename, title: titleText, breakerName: nameVal, nominator: nominatorVal, recognition: descVal, test: TEST_MODE }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || 'Slack upload failed');
 
       // ── Silent log ──
-      logNomination(titleText, nameVal, nominatorVal, descVal);
+      if (!TEST_MODE) logNomination(titleText, nameVal, nominatorVal, descVal);
 
       btn.textContent = data.tagged ? '✓ Sent & tagged!' : '✓ Sent (no Slack match, not tagged)';
-      setTimeout(() => { btn.disabled = false; btn.textContent = '📤 Send to Cheers for Peers'; }, 4000);
+      setTimeout(() => { btn.disabled = false; btn.textContent = SEND_LABEL; }, 4000);
     } catch(err) {
       console.error(err);
       btn.disabled = false;
       btn.textContent = '⚠ Failed — retry';
-      setTimeout(() => { btn.textContent = '📤 Send to Cheers for Peers'; }, 3000);
+      setTimeout(() => { btn.textContent = SEND_LABEL; }, 3000);
     }
   }
 </script>

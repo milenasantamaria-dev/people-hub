@@ -6,6 +6,7 @@
 //   @-mention people) `users:read` + `users:read.email`; without them the
 //   card still posts, just without a tag
 //   ROSTER_SECRET   — optional; enables exact tagging by work email
+//   SLACK_TEST_CHANNEL_ID — optional; private channel used by ?test=1 mode
 //
 // The channel ID isn't secret, so it's hardcoded here rather than in an
 // env var — #cheers-for-peers, where the Breaker Awards bot was invited.
@@ -141,7 +142,7 @@ export default async function handler(req, res) {
     return;
   }
 
-  const { imageBase64, filename, title, breakerName, nominator, recognition } = req.body || {};
+  const { imageBase64, filename, title, breakerName, nominator, recognition, test } = req.body || {};
   if (!imageBase64 || !filename) {
     res.status(400).json({ error: 'Missing imageBase64 or filename' });
     return;
@@ -153,11 +154,20 @@ export default async function handler(req, res) {
     return;
   }
 
+  // Test mode (hall-of-fame.html?test=1) posts to a private test channel instead
+  // of the team channel. If that channel isn't configured it refuses outright
+  // rather than falling back to the real one.
+  const channel = test ? process.env.SLACK_TEST_CHANNEL_ID : SLACK_CHANNEL_ID;
+  if (!channel) {
+    res.status(400).json({ error: 'Test channel not configured (missing SLACK_TEST_CHANNEL_ID)' });
+    return;
+  }
+
   try {
     const buffer = Buffer.from(imageBase64, 'base64');
     const userId = await findUserId(token, breakerName);
     const who = userId ? `<@${userId}>` : `*${slackEsc(breakerName) || 'a Breaker'}*`;
-    let text = `🏆 *${slackEsc(title) || 'Breaker Award'}* nomination for ${who}, submitted by ${slackEsc(nominator) || 'Anonymous'}.`;
+    let text = `${test ? '🧪 *[TEST]* ' : ''}🏆 *${slackEsc(title) || 'Breaker Award'}* nomination for ${who}, submitted by ${slackEsc(nominator) || 'Anonymous'}.`;
     // The written recognition goes in the message itself (as a quote) so it's
     // readable in the channel without opening the card image.
     const note = String(recognition || '').trim().slice(0, 2000);
@@ -177,7 +187,7 @@ export default async function handler(req, res) {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            channel: SLACK_CHANNEL_ID,
+            channel,
             text,
             blocks: [
               { type: 'section', text: { type: 'mrkdwn', text } },
@@ -194,7 +204,7 @@ export default async function handler(req, res) {
     }
 
     // Fallback: share the file straight into the channel with the same text.
-    if (!posted) await uploadFile(token, buffer, filename, 'image/png', SLACK_CHANNEL_ID, text);
+    if (!posted) await uploadFile(token, buffer, filename, 'image/png', channel, text);
 
     res.status(200).json({ ok: true, tagged: Boolean(userId) });
   } catch (err) {
