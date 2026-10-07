@@ -645,6 +645,19 @@ body {
         logging: false,
         scrollX: 0,
         scrollY: -window.scrollY,
+        // Inputs/textareas clip long text (one visible line). Render the sent card
+        // from plain divs that grow to fit, so the whole recognition is readable.
+        onclone: (doc, clonedCard) => {
+          clonedCard.style.height = 'auto';
+          clonedCard.style.alignSelf = 'flex-start';
+          clonedCard.querySelectorAll('input.field-input, textarea.field-textarea').forEach(f => {
+            const d = doc.createElement('div');
+            d.className = f.className;
+            d.textContent = f.value;
+            d.style.cssText += ';white-space:pre-wrap;overflow-wrap:anywhere;height:auto;min-height:0;line-height:1.5;';
+            f.replaceWith(d);
+          });
+        },
       });
     } finally {
       footer.style.display = '';
