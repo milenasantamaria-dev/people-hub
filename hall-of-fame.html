@@ -7,7 +7,6 @@
 <link rel="icon" type="image/png" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 @font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-Light-V1.123.woff2') format('woff2'); font-weight: 300; font-style: normal; font-display: swap; }
 @font-face { font-family: 'Aeonik'; src: url('fonts/Aeonik-LightItalic-V1.123.woff2') format('woff2'); font-weight: 300; font-style: italic; font-display: swap; }
@@ -617,7 +616,7 @@ body {
     localStorage.setItem(LOG_KEY, JSON.stringify(existing));
   }
 
-  async function buildCardPdf(card, { scale = 3, quality = 0.95 } = {}) {
+  async function buildCardImage(card, { scale = 3 } = {}) {
     const nameVal      = card.querySelector('[data-field="name"]')?.value.trim()      || '';
     const nominatorVal = card.querySelector('[data-field="nominator"]')?.value.trim() || '';
     const descVal      = card.querySelector('[data-field="desc"]')?.value.trim()      || '';
@@ -641,18 +640,11 @@ body {
       footer.style.display = '';
     }
 
-    // JPEG, not PNG: jsPDF embeds PNGs as raw decoded pixels (huge), but
-    // reuses a JPEG's own compressed byte stream directly (tiny).
-    const mmW = (canvas.width  / scale) * 0.2646;
-    const mmH = (canvas.height / scale) * 0.2646;
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [mmW, mmH] });
-    pdf.addImage(canvas.toDataURL('image/jpeg', quality), 'JPEG', 0, 0, mmW, mmH);
-
+    const imageBase64 = canvas.toDataURL('image/png').split(',')[1];
     const safeName  = (nameVal || 'breaker').replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const safeTitle = titleText.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 
-    return { pdf, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle };
+    return { imageBase64, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle };
   }
 
   async function sendToSlack(card) {
@@ -661,15 +653,13 @@ body {
     btn.textContent = '⏳ Sending…';
 
     try {
-      const { pdf, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle } = await buildCardPdf(card);
-      const pdfBase64 = pdf.output('datauristring').split(',')[1];
-      const filename = `daybreak_${safeTitle}_${safeName}.pdf`;
-      const message = `🏆 *${titleText}* nomination for *${nameVal || 'a Breaker'}*, submitted by ${nominatorVal || 'Anonymous'}.`;
+      const { imageBase64, nameVal, nominatorVal, descVal, titleText, safeName, safeTitle } = await buildCardImage(card);
+      const filename = `daybreak_${safeTitle}_${safeName}.png`;
 
       const res = await fetch('/api/send-to-slack', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pdfBase64, filename, message }),
+        body: JSON.stringify({ imageBase64, filename, title: titleText, breakerName: nameVal, nominator: nominatorVal, recognition: descVal }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) throw new Error(data.error || 'Slack upload failed');
@@ -677,8 +667,8 @@ body {
       // ── Silent log ──
       logNomination(titleText, nameVal, nominatorVal, descVal);
 
-      btn.textContent = '✓ Sent!';
-      setTimeout(() => { btn.disabled = false; btn.textContent = '📤 Send to Cheers for Peers'; }, 3000);
+      btn.textContent = data.tagged ? '✓ Sent & tagged!' : '✓ Sent (no Slack match, not tagged)';
+      setTimeout(() => { btn.disabled = false; btn.textContent = '📤 Send to Cheers for Peers'; }, 4000);
     } catch(err) {
       console.error(err);
       btn.disabled = false;
