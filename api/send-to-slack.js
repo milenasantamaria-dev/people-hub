@@ -2,9 +2,10 @@
 // hall-of-fame.html and posts it to the #cheers-for-peers Slack channel,
 // @-mentioning the recipient when we can match them to a Slack member.
 // Required env var (set in the Vercel project dashboard, never in code):
-//   SLACK_BOT_TOKEN — bot token with the scopes `files:write`, `chat:write`
-//   and `users:read` (the last one is only needed to @-mention people;
-//   without it the card still posts, just without a tag)
+//   SLACK_BOT_TOKEN — bot token with `files:write`, `chat:write`, and (only to
+//   @-mention people) `users:read` + `users:read.email`; without them the
+//   card still posts, just without a tag
+//   ROSTER_SECRET   — optional; enables exact tagging by work email
 //
 // The channel ID isn't secret, so it's hardcoded here rather than in an
 // env var — #cheers-for-peers, where the Breaker Awards bot was invited.
@@ -26,6 +27,26 @@ const slackEsc = (s) => String(s || '').replace(/&/g, '&amp;').replace(/</g, '&l
 const norm = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// ── Roster (Performance app "Breakers" tab, via the Referrals Apps Script) ──
+// Needs env var ROSTER_SECRET (same value as the Apps Script property of the
+// same name). Without it, roster features switch off and callers fall back.
+const ROSTER_URL = 'https://script.google.com/macros/s/AKfycbzNFzM6rZ0Q8TSA_l22mnoUBkH-4PZs9DTLj9PnE75g1XOAyR_bq6vHUJnW6Nxn1WlBfQ/exec';
+let rosterCache = { at: 0, breakers: [] };
+async function loadRoster() {
+  const key = process.env.ROSTER_SECRET;
+  if (!key) return [];
+  if (rosterCache.breakers.length && Date.now() - rosterCache.at < 10 * 60 * 1000) return rosterCache.breakers;
+  try {
+    const r = await fetch(`${ROSTER_URL}?action=breakers&key=${encodeURIComponent(key)}`).then((x) => x.json());
+    if (!r.success) throw new Error(r.error || 'roster request failed');
+    rosterCache = { at: Date.now(), breakers: r.breakers };
+    return r.breakers;
+  } catch (err) {
+    console.warn('Could not load roster:', err.message);
+    return [];
+  }
+}
+
 let userCache = { at: 0, users: [] };
 async function loadUsers(token) {
   if (userCache.users.length && Date.now() - userCache.at < 10 * 60 * 1000) return userCache.users;
@@ -45,8 +66,27 @@ async function loadUsers(token) {
   return users;
 }
 
-// Returns a Slack user ID only when exactly one member matches the typed name.
+// Best path: typed name -> roster -> work email -> Slack user (exact, no typos).
+async function findUserIdByEmail(token, name) {
+  const target = norm(name);
+  if (!target) return null;
+  const matches = (await loadRoster()).filter((b) => norm(b.name) === target || norm(b.preferredName) === target);
+  if (matches.length !== 1) return null;
+  try {
+    const r = await fetch(`https://slack.com/api/users.lookupByEmail?email=${encodeURIComponent(matches[0].email)}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then((x) => x.json());
+    return r.ok ? r.user.id : null;
+  } catch (err) {
+    console.warn('Email lookup failed (is users:read.email granted?):', err.message);
+    return null;
+  }
+}
+
+// Fallback: returns a Slack user ID only when exactly one member matches the typed name.
 async function findUserId(token, name) {
+  const byEmail = await findUserIdByEmail(token, name);
+  if (byEmail) return byEmail;
   const target = norm(name);
   if (!target) return null;
   try {

@@ -284,9 +284,40 @@ function doGet(e) {
       .createTextOutput(JSON.stringify(getRoles()))
       .setMimeType(ContentService.MimeType.JSON);
   }
+  if (action === "breakers") {
+    // Names + emails of active Breakers, for the Hall of Fame Slack tagging.
+    // Protected by a shared secret (Script Property ROSTER_SECRET) because a web
+    // app URL is public — only the Vercel server, never a browser, calls this.
+    const secret = PropertiesService.getScriptProperties().getProperty("ROSTER_SECRET");
+    const ok = secret && e.parameter.key === secret;
+    return ContentService
+      .createTextOutput(JSON.stringify(ok ? getBreakers() : { success: false, error: "Unauthorized" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   return ContentService
     .createTextOutput(JSON.stringify({ status: "Daybreak Referrals API is running" }))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+// Active Breakers from the Performance app's "Breakers" tab (same source as roles).
+function getBreakers() {
+  const sheet = SpreadsheetApp.openById(ROLES_SPREADSHEET_ID).getSheetByName(ROLES_SHEET_NAME);
+  if (!sheet) return { success: false, error: "Sheet '" + ROLES_SHEET_NAME + "' not found." };
+
+  const rows = sheet.getDataRange().getValues();
+  const idx = {};
+  rows[0].forEach((h, i) => { idx[String(h).trim()] = i; });
+
+  const breakers = rows.slice(1)
+    .filter(r => String(r[idx.status] || "").toLowerCase() === "active" && String(r[idx.email] || "").trim())
+    .map(r => ({
+      name: String(r[idx.full_name] || "").trim(),
+      preferredName: String(r[idx.preferred_name] || "").trim(),
+      email: String(r[idx.email]).trim().toLowerCase()
+    }))
+    .filter(b => b.name);
+
+  return { success: true, breakers: breakers };
 }
 
 // Reads the Performance Review app's "Breakers" tab and returns the distinct

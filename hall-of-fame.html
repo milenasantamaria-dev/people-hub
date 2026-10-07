@@ -585,6 +585,16 @@ body {
     });
   }
 
+  // Suggest active Breakers' names (server returns names only) so the name matches the roster exactly.
+  fetch('/api/breakers').then(r => r.json()).then(({ names }) => {
+    if (!names || !names.length) return;
+    const dl = document.createElement('datalist');
+    dl.id = 'breakers-list';
+    names.forEach(n => { const o = document.createElement('option'); o.value = n; dl.appendChild(o); });
+    document.body.appendChild(dl);
+    document.querySelectorAll('[data-field="name"]').forEach(i => i.setAttribute('list', 'breakers-list'));
+  }).catch(() => {});
+
   function esc(str) {
     if (!str) return '';
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
