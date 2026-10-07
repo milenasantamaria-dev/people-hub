@@ -585,14 +585,23 @@ body {
     });
   }
 
-  // Suggest active Breakers' names (server returns names only) so the name matches the roster exactly.
+  // Active Breakers' names (server returns names only). Individual awards must use one
+  // of these exactly, so the Slack tag can't miss because of a typo. If the list can't
+  // be loaded, the field stays free text and nothing is blocked.
+  let rosterNames = [];
+  const nameKey = n => n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const individualNameInputs = () => document.querySelectorAll('.card[data-cat="individual"] [data-field="name"]');
   fetch('/api/breakers').then(r => r.json()).then(({ names }) => {
     if (!names || !names.length) return;
+    rosterNames = names;
     const dl = document.createElement('datalist');
     dl.id = 'breakers-list';
     names.forEach(n => { const o = document.createElement('option'); o.value = n; dl.appendChild(o); });
     document.body.appendChild(dl);
-    document.querySelectorAll('[data-field="name"]').forEach(i => i.setAttribute('list', 'breakers-list'));
+    individualNameInputs().forEach(i => {
+      i.setAttribute('list', 'breakers-list');
+      i.placeholder = 'Start typing and pick a Breaker';
+    });
   }).catch(() => {});
 
   function esc(str) {
@@ -683,6 +692,19 @@ body {
 
   async function sendToSlack(card) {
     const btn = card.querySelector('.btn-slack');
+
+    if (rosterNames.length && card.dataset.cat === 'individual') {
+      const input = card.querySelector('[data-field="name"]');
+      const match = rosterNames.find(n => nameKey(n) === nameKey(input.value));
+      if (!match) {
+        input.focus();
+        btn.textContent = '⚠ Pick the name from the list';
+        setTimeout(() => { btn.textContent = SEND_LABEL; }, 3000);
+        return;
+      }
+      input.value = match;
+    }
+
     btn.disabled = true;
     btn.textContent = '⏳ Sending…';
 
